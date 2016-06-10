@@ -1,6 +1,6 @@
-import { createStore } from 'redux'
-import plusOneApp from '../reducers/App'
+import { createStore, combineReducers } from 'redux'
+import * as reducers from '../reducers'
 
-let store = createStore(plusOneApp)
+const plusOneAppReducers = combineReducers(reducers)
 
-export default store
+export default createStore(plusOneAppReducers);

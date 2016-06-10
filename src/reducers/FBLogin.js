@@ -1,3 +1,4 @@
+import { createReducer } from 'redux-immutablejs'
 import {
   FB_LOGIN_ATTEMPT,
   FB_LOGOUT,
@@ -5,14 +6,13 @@ import {
   FB_LOGIN_STATE
 } from '../actions/FBLogin'
 
-
 const initialState = {
   accessToken: '',
   loginState: FB_LOGIN_STATE.NOT_LOGGED_IN,
   facebookName: ''
 }
 
-export function FBLogin(state = initialState, action) {
+export function login(state = initialState, action) {
   switch (action.type) {
     case FB_LOGIN_ATTEMPT:
       return Object.assign({}, state, {

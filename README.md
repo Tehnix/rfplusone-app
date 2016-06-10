@@ -23,6 +23,14 @@ react-native run-android
 ```
 
 # Dependencies
+
+Basically the following should be enough, but in any case, the rest of the dependencies are listed here as well.
+
+```bash
+npm -i install
+rnpm install react-native-fbsdk
+```
+
 ## Installing redux
 Install redux
 
@@ -40,6 +48,7 @@ npm install --save-dev redux-devtools
 and for routing
 
 ```bash
+npm install --save react-router
 npm install --save react-router-redux
 ```
 
@@ -47,7 +56,6 @@ npm install --save react-router-redux
 ```bash
 npm install --save immutable
 ```
-
 
 ## Setting up Facebook SDK for Facebook login
 For the JavaScript packages install `rnpm`

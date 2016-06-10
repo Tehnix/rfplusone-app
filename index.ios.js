@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import { Provider, connect } from 'react-redux'
+import { AppRegistry } from 'react-native'
+import { Provider } from 'react-redux'
 
 import store from './src/stores/Store'
 import FBLogin from './src/components/FBLogin'
@@ -19,21 +14,10 @@ class PlusOne extends Component {
   render() {
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          <FBLogin/>
-        </View>
+        <FBLogin/>
       </Provider>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  }
-})
 
 AppRegistry.registerComponent('PlusOne', () => PlusOne)
