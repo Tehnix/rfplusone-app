@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import {
   StyleSheet,
   Text,
@@ -22,39 +22,20 @@ const {
   GraphRequestManager,
 } = FBSDK
 
-var FBLogin = React.createClass({
+class FBLogin extends Component {
 
-  getInitialState: function() {
-    return {
-      fbLoginState: '',
-      fbLoginError: '',
-      fbIsLoggedIn: false,
-      fbAccessToken: ''
-    }
-  },
-
-  _responseInfoCallback: function(error: ?Object, result: ?Object) {
+  render() {
     const { store } = this.context;
-    if (error) {
-      // Handle the error...
-    } else {
-      store.dispatch(setFBName(result.name))
+    let welcomeText = (<Text></Text>)
+    if (this.props.facebookName) {
+      welcomeText = (<Text>
+        Welcome {this.props.facebookName}!
+      </Text>)
     }
-  },
-
-  render: function() {
-    const { store } = this.context;
     return (
       <View style={styles.loginContainer}>
         <Text style={styles.welcome}>
           Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
         </Text>
         <LoginButton
           readPermissions={["public_profile", "user_friends", "email"]}
@@ -72,7 +53,13 @@ var FBLogin = React.createClass({
                     new GraphRequestManager().addRequest(new GraphRequest(
                       '/me',
                       null,
-                      this._responseInfoCallback,
+                      function(error: ?Object, result: ?Object) {
+                        if (error) {
+                          // Handle the error...
+                        } else {
+                          store.dispatch(setFBName(result.name))
+                        }
+                      },
                     )).start()
                   }
                 )
@@ -80,13 +67,11 @@ var FBLogin = React.createClass({
             }
           }
           onLogoutFinished={() => store.dispatch(successfulFBLogout())} />
-        <Text>
-          Welcome {this.props.facebookName}!
-        </Text>
+        {welcomeText}
       </View>
     )
   }
-})
+}
 FBLogin.contextTypes = {
   store: React.PropTypes.object
 }
@@ -112,11 +97,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  }
 })
 
 module.exports = FBLogin, FBLoginContainer
