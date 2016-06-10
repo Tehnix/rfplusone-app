@@ -8,7 +8,7 @@ import {
 import { Provider, connect } from 'react-redux'
 
 import store from './src/stores/Store'
-import FBLoginContainer from './src/components/FBLogin'
+import FBLogin from './src/components/FBLogin'
 
 let unsubscribe = store.subscribe(() =>
   console.log(store.getState())
@@ -20,7 +20,7 @@ class PlusOne extends Component {
     return (
       <Provider store={store}>
         <View style={styles.container}>
-          <FBLoginContainer/>
+          <FBLogin/>
         </View>
       </Provider>
     )

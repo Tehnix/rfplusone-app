@@ -85,8 +85,6 @@ const mapStateToProps = function(state) {
   }
 }
 
-const FBLoginContainer = connect(mapStateToProps)(FBLogin)
-
 const styles = StyleSheet.create({
   loginContainer: {
     justifyContent: 'center',
@@ -99,4 +97,4 @@ const styles = StyleSheet.create({
   },
 })
 
-module.exports = FBLogin, FBLoginContainer
+module.exports = connect(mapStateToProps)(FBLogin)
