@@ -1,4 +1,4 @@
-package com.plusone;
+package dk.rfplusone;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -21,7 +21,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "PlusOne";
+        return "rfplusone";
     }
 
     /**
