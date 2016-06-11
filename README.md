@@ -57,6 +57,12 @@ npm install --save react-router-redux
 npm install --save immutable
 ```
 
+
+## Adding persistence
+```bash
+npm install --save redux-persist
+```
+
 ## Setting up Facebook SDK for Facebook login
 For the JavaScript packages install `rnpm`
 

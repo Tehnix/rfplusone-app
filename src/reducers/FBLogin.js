@@ -9,7 +9,8 @@ import {
 const initialState = {
   accessToken: '',
   loginState: FB_LOGIN_STATE.NOT_LOGGED_IN,
-  facebookName: ''
+  facebookName: '',
+  facebookUUID: ''
 }
 
 export function login(state = initialState, action) {
@@ -23,11 +24,13 @@ export function login(state = initialState, action) {
       return Object.assign({}, state, {
         accessToken: action.accessToken,
         loginState: action.loginState,
-        facebookName: action.fbName
+        facebookName: action.fbName,
+        facebookUUID: action.fbUUID
       })
     case SET_FB_NAME:
       return Object.assign({}, state, {
-        facebookName: action.fbName
+        facebookName: action.fbName,
+        facebookUUID: action.fbUUID
       })
     default:
       return state

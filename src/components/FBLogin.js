@@ -11,7 +11,7 @@ import {
   cancelledFBLogin,
   errorFBLogin,
   successfulFBLogout,
-  setFBName
+  setFBNameAndUUID
 } from '../actions/FBLogin'
 
 const FBSDK = require('react-native-fbsdk')
@@ -24,78 +24,59 @@ const {
 
 class FBLogin extends Component {
 
+  // Fetch the users name and ID via the Graph API
+  _fetchFBProfile(store) {
+    new GraphRequestManager().addRequest(new GraphRequest(
+      '/me',
+      null,
+      function(error: ?Object, result: ?Object) {
+        if (error) {
+          // Handle the error...
+        } else {
+          store.dispatch(setFBNameAndUUID(result.name, result.id))
+        }
+      },
+    )).start()
+  }
+
+  // Handle the login result, and store the access token if successful
+  _handleLogin(store, error, result) {
+    if (error) {
+      store.dispatch(errorFBLogin())
+    } else if (result.isCancelled) {
+      store.dispatch(cancelledFBLogin())
+    } else {
+      AccessToken.getCurrentAccessToken().then(
+        (data) => {
+          store.dispatch(successfulFBLogin(data.accessToken.toString()))
+          // Fetch the users facebook name
+          this._fetchFBProfile(store)
+        }
+      )
+    }
+  }
+
   render() {
     const { store } = this.context;
-    let welcomeText = (<Text></Text>)
-    if (this.props.facebookName) {
-      welcomeText = (<Text>
-        Welcome {this.props.facebookName}!
-      </Text>)
-    }
     return (
-      <View style={styles.loginContainer}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <LoginButton
-          readPermissions={["public_profile", "user_friends", "email"]}
-          onLoginFinished={
-            (error, result) => {
-              if (error) {
-                store.dispatch(errorFBLogin())
-              } else if (result.isCancelled) {
-                store.dispatch(cancelledFBLogin())
-              } else {
-                AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                    store.dispatch(successfulFBLogin(data.accessToken.toString()))
-                    // Fetch the users facebook name
-                    new GraphRequestManager().addRequest(new GraphRequest(
-                      '/me',
-                      null,
-                      function(error: ?Object, result: ?Object) {
-                        if (error) {
-                          // Handle the error...
-                        } else {
-                          store.dispatch(setFBName(result.name))
-                        }
-                      },
-                    )).start()
-                  }
-                )
-              }
-            }
-          }
-          onLogoutFinished={() => store.dispatch(successfulFBLogout())} />
-        {welcomeText}
-      </View>
+      <LoginButton
+        style={styles.loginButton}
+        readPermissions={["public_profile", "user_friends", "email"]}
+        onLoginFinished={(e, res) => this._handleLogin(store, e, res)}
+        onLogoutFinished={() => store.dispatch(successfulFBLogout())}/>
     )
   }
 }
-FBLogin.contextTypes = {
-  store: React.PropTypes.object
-}
-FBLogin.propTypes = {
-  facebookName: React.PropTypes.string
-}
 
-const mapStateToProps = function(state) {
-  return {
-    facebookName: state.login.facebookName
-  }
+FBLogin.contextTypes = {
+  store: React.PropTypes.object.isRequired
 }
 
 const styles = StyleSheet.create({
-  loginContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  loginButton: {
+    height: 55,
+    width: 220
   },
 })
 
-module.exports = connect(mapStateToProps)(FBLogin)
+module.exports = connect()(FBLogin)

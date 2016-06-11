@@ -47,13 +47,15 @@ export function successfulFBLogout() {
     type: FB_LOGOUT,
     accessToken: '',
     loginState: FB_LOGIN_STATE.NOT_LOGGED_IN,
-    fbName: ''
+    fbName: '',
+    fbUUID: ''
   }
 }
 
-export function setFBName(fbName) {
+export function setFBNameAndUUID(fbName, fbUUID) {
   return {
     type: SET_FB_NAME,
-    fbName: fbName
+    fbName: fbName,
+    fbUUID: fbUUID
   }
 }
