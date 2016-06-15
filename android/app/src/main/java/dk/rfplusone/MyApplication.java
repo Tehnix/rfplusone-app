@@ -1,4 +1,4 @@
-package com.plusone;
+package dk.rfplusone;
 
 import android.app.Application;
 
