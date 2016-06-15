@@ -10,15 +10,19 @@
     "react": "^15.1.0",
     "react-native": "0.27.1",
     "react-native-fbsdk": "^0.2.1",
+    "react-native-router-flux": "^3.30.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.1",
-    "react-router-redux": "^4.0.5",
     "redux": "^3.5.2",
     "redux-immutablejs": "0.0.8",
     "redux-persist": "^3.2.2",
     "rnpm": "^1.8.0"
   },
   "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "eslint": "^2.12.0",
+    "eslint-plugin-react": "^5.1.1",
+    "eslint-plugin-react-native": "^1.1.0-beta",
     "redux-devtools": "^3.3.1"
   }
 }

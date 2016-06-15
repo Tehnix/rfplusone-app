@@ -3,7 +3,7 @@ import { AppRegistry } from 'react-native'
 import { Provider } from 'react-redux'
 
 import store from './src/stores/Store'
-import MainLayout from './src/components/MainLayout'
+import Routing from './src/components/Router'
 
 let unsubscribe = store.subscribe(() =>
   console.log(store.getState())
@@ -14,7 +14,7 @@ class PlusOne extends Component {
   render() {
     return (
       <Provider store={store}>
-        <MainLayout/>
+        <Routing/>
       </Provider>
     )
   }

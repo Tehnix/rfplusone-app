@@ -45,17 +45,18 @@ export function errorFBLogin() {
 export function successfulFBLogout() {
   return {
     type: FB_LOGOUT,
-    accessToken: '',
     loginState: FB_LOGIN_STATE.NOT_LOGGED_IN,
-    fbName: '',
-    fbUUID: ''
   }
 }
 
-export function setFBNameAndUUID(fbName, fbUUID) {
+export function setFacebookUserInformation(fbID, fbFullName, fbFirstName, fbMiddleName, fbLastName, fbEmail) {
   return {
     type: SET_FB_NAME,
-    fbName: fbName,
-    fbUUID: fbUUID
+    fbID: fbID,
+    fbFullName: fbFullName,
+    fbFirstName: fbFirstName,
+    fbMiddleName: fbMiddleName,
+    fbLastName: fbLastName,
+    fbEmail: fbEmail
   }
 }

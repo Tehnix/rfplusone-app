@@ -22,6 +22,29 @@ and for Android use
 react-native run-android
 ```
 
+# Compling SVG images
+
+First inkscape is needed. Either download it or install via homebrew and cask
+
+```bash
+brew cask install inkscape
+```
+
+and imagemagick
+
+```bash
+brew install imagemagick
+```
+
+then finally, run `make` in graphics
+
+```bash
+cd graphics
+make
+```
+
+and the images should be created.
+
 # Dependencies
 
 Basically the following should be enough, but in any case, the rest of the dependencies are listed here as well.
@@ -49,7 +72,7 @@ and for routing
 
 ```bash
 npm install --save react-router
-npm install --save react-router-redux
+npm install --save react-native-router-flux
 ```
 
 ## Installing immutable.js
