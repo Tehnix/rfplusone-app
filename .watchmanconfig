@@ -1,1 +1,7 @@
-{}
+{
+  "ignore_dirs": [
+    "graphics",
+    "ios",
+    "android"
+  ]
+}

@@ -51,6 +51,8 @@ const mapStateToProps = function(state) {
   }
 }
 
+module.exports = connect(mapStateToProps)(ChatList)
+
 const styles = StyleSheet.create({
   welcome: {
     fontSize: 20,
@@ -58,5 +60,3 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 })
-
-module.exports = connect(mapStateToProps)(ChatList)

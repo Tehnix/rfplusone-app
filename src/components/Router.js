@@ -24,18 +24,23 @@ class Routing extends Component {
   render() {
     return (
       <RouterWithRedux>
-        <Scene key="root">
+        <Scene key="root"
+               navigationBarStyle={styles.navigationBar}
+               titleStyle={styles.navigationTitle}
+               backButtonImage={require('../../graphics/backButtonWhite.png')}>
           <Scene key="concertList"
                  component={ConcertList}
                  title="Concerts"
                  hideBackImage={true}
-                 rightTitle="Chat"
+                 rightButtonImage={require('../../graphics/chatIcon.png')}
+                 rightButtonIconStyle={styles.chatIcon}
                  onRight={()=>Actions.chatList()}
                  initial={true}/>
           <Scene key="concertView"
                  component={ConcertView}
                  title="Concerts View"
-                 rightTitle="Chat"
+                 rightButtonImage={require('../../graphics/chatIcon.png')}
+                 rightButtonIconStyle={styles.chatIcon}
                  onRight={()=>Actions.chatList()}/>
           <Scene key="chatList" component={ChatList} title="Chats"/>
           <Scene key="chatView" component={ChatView} title="Chat"/>
@@ -52,3 +57,20 @@ class Routing extends Component {
 }
 
 module.exports = Routing
+
+const styles = StyleSheet.create({
+  navigationBar: {
+    backgroundColor: '#262626',
+    borderBottomWidth: 0,
+  },
+  navigationTitle: {
+    color: 'white',
+  },
+  chatIcon: {
+    width: 20,
+    height: 20,
+  },
+  backButton: {
+    color: 'white',
+  },
+})

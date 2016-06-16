@@ -4,11 +4,12 @@ import {
   Text,
   View,
   Image,
-  StatusBar
 } from 'react-native'
 import { connect } from 'react-redux'
 
 import MainLayout from './MainLayout'
+import ConcertActions from './ConcertActions'
+import PeopleList from './PeopleList'
 
 class ConcertView extends Component {
 
@@ -16,13 +17,33 @@ class ConcertView extends Component {
     const { store } = this.context
     return (
       <MainLayout>
-        <View>
-          <Text style={styles.welcome}>
-            {this.props.concert.artist}
-          </Text>
-          <Text>
-            Playing on {this.props.concert.day}, {this.props.concert.time} at {this.props.concert.location}!
-          </Text>
+        <View style={styles.container}>
+          <Image style={styles.bannerImage}
+                 source={{uri: this.props.concert.picture.banner}}>
+           <View style={styles.concertInfoContainer}>
+             <Text style={styles.concertInfoTop}>
+               {this.props.concert.day.toUpperCase()}
+             </Text>
+           </View>
+           <View style={styles.concertInfoContainer}>
+             <Text style={styles.concertInfo}>
+               {this.props.concert.time}
+             </Text>
+           </View>
+           <View style={styles.concertInfoContainer}>
+             <Text style={styles.concertInfo}>
+               {this.props.concert.location.toUpperCase()}
+             </Text>
+           </View>
+           <View style={styles.artistContainer}>
+             <Text style={styles.artistName}>
+               {this.props.concert.artist.toUpperCase()}
+             </Text>
+           </View>
+          </Image>
+          <ConcertActions concertKey={this.props.concert.key}/>
+          <PeopleList filter={this.props.concert.status}
+                      concertKey={this.props.concert.key}/>
         </View>
       </MainLayout>
     )
@@ -44,12 +65,50 @@ const mapStateToProps = function(state) {
   }
 }
 
+module.exports = connect(mapStateToProps)(ConcertView)
+
 const styles = StyleSheet.create({
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  container: {
+    flex: 1,
+  },
+  artistContainer: {
+    alignItems: 'flex-start',
+  },
+  artistName: {
+    fontSize: 16,
+    textAlign: 'left',
+    color: 'orange',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingLeft: 3,
+    paddingRight: 3,
+    marginTop: 45,
+    marginLeft: 5,
+  },
+  concertInfoContainer: {
+    alignItems: 'flex-end',
+  },
+  concertInfo: {
+    fontSize: 14,
+    textAlign: 'right',
+    color: 'orange',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingLeft: 3,
+    paddingRight: 3,
+    height: 17,
+    marginRight: 5,
+  },
+  concertInfoTop: {
+    fontSize: 14,
+    textAlign: 'right',
+    color: 'orange',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingLeft: 3,
+    paddingRight: 3,
+    height: 17,
+    marginTop: 10,
+    marginRight: 5,
+  },
+  bannerImage: {
+    height: 130,
   },
 })
-
-module.exports = connect(mapStateToProps)(ConcertView)

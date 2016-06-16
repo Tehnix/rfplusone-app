@@ -45,6 +45,8 @@ const mapStateToProps = function(state) {
   }
 }
 
+module.exports = connect(mapStateToProps)(Login)
+
 const styles = StyleSheet.create({
   loginImage: {
     flex: 1,
@@ -54,5 +56,3 @@ const styles = StyleSheet.create({
     height: null,
   },
 })
-
-module.exports = connect(mapStateToProps)(Login)

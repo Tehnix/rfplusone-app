@@ -1,9 +1,15 @@
 import {
-  UPDATED_CHAT_LIST,
-  CHAT_TYPES
+  UPDATE_CHAT_LIST,
+  SHOW_CHAT_ACTIVITY,
+  HIDE_CHAT_ACTIVITY,
+  SET_CHAT_UNREAD_COUNT,
+  CHAT_TYPES,
+  CHAT_ICON_STATE
 } from '../actions/Chats'
 
 const initialState = {
+  chatIconState: CHAT_ICON_STATE.NOT_SHOWING_CHAT_ACTIVITY,
+  totalUnreadCount: 18,
   chats: [
     {
       key: 1,
@@ -47,9 +53,22 @@ const initialState = {
 
 export function chats(state = initialState, action) {
   switch (action.type) {
-  case UPDATED_CHAT_LIST:
+  case UPDATE_CHAT_LIST:
     return Object.assign({}, state, {
       chats: action.chats
+    })
+  case SHOW_CHAT_ACTIVITY:
+    return Object.assign({}, state, {
+      chatIconState: CHAT_ICON_STATE.SHOWING_CHAT_ACTIVITY
+    })
+  case HIDE_CHAT_ACTIVITY:
+    return Object.assign({}, state, {
+      chatIconState: CHAT_ICON_STATE.NOT_SHOWING_CHAT_ACTIVITY
+    })
+  case SET_CHAT_UNREAD_COUNT:
+    return Object.assign({}, state, {
+      chatIconState: action.chatIconState,
+      totalUnreadCount: action.totalUnreadCount
     })
   default:
     return state

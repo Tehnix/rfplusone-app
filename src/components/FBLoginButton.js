@@ -90,11 +90,11 @@ FBLoginButton.contextTypes = {
   store: React.PropTypes.object.isRequired
 }
 
+module.exports = connect()(FBLoginButton)
+
 const styles = StyleSheet.create({
   loginButton: {
     height: 55,
     width: 220
   },
 })
-
-module.exports = connect()(FBLoginButton)
