@@ -1,4 +1,3 @@
-import { createReducer } from 'redux-immutablejs'
 import {
   FB_LOGIN_ATTEMPT,
   FB_LOGOUT,

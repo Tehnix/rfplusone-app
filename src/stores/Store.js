@@ -1,11 +1,13 @@
 import { createStore, combineReducers } from 'redux'
-import { persistStore, autoRehydrate } from 'redux-persist'
 import { AsyncStorage } from 'react-native'
+import { persistStore, autoRehydrate } from 'redux-persist'
 import * as reducers from '../reducers'
 
 const plusOneAppReducers = combineReducers(reducers)
 
 const store = createStore(plusOneAppReducers, undefined, autoRehydrate())
-persistStore(store, {storage: AsyncStorage})
+persistStore(store, {storage: AsyncStorage}, () => {
+  console.log('Finished Rehydrating')
+})
 
 export default store

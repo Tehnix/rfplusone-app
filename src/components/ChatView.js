@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 
 import MainLayout from './MainLayout'
 
-class ConcertView extends Component {
+class ChatView extends Component {
 
   render() {
     const { store } = this.context
@@ -18,10 +18,20 @@ class ConcertView extends Component {
       <MainLayout>
         <View>
           <Text style={styles.welcome}>
-            {this.props.concert.artist}
+            Chat {this.props.chat.key}
           </Text>
           <Text>
-            Playing on {this.props.concert.day}, {this.props.concert.time} at {this.props.concert.location}!
+            Participants:{"\n"}
+            {this.props.chat.participants.map(function(participant) {
+              return (
+                <Text key={participant.name}>
+                  {participant.name}{"\n"}
+                </Text>
+              )
+            })}
+          </Text>
+          <Text>
+            Playing on {this.props.chat.concert.day}, {this.props.chat.concert.time} at {this.props.chat.concert.location}!
           </Text>
         </View>
       </MainLayout>
@@ -29,13 +39,13 @@ class ConcertView extends Component {
   }
 }
 
-ConcertView.contextTypes = {
+ChatView.contextTypes = {
   store: React.PropTypes.object.isRequired
 }
 
-ConcertView.propTypes = {
+ChatView.propTypes = {
   routes: React.PropTypes.object,
-  concert: React.PropTypes.object.isRequired
+  chat: React.PropTypes.object.isRequired
 }
 
 const mapStateToProps = function(state) {
@@ -52,4 +62,4 @@ const styles = StyleSheet.create({
   },
 })
 
-module.exports = connect(mapStateToProps)(ConcertView)
+module.exports = connect(mapStateToProps)(ChatView)

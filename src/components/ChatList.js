@@ -4,43 +4,50 @@ import {
   Text,
   View,
   Image,
-  StatusBar
+  StatusBar,
+  Button
 } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 
 import MainLayout from './MainLayout'
 
-class ConcertView extends Component {
-
+class ChatList extends Component {
   render() {
     const { store } = this.context
     return (
       <MainLayout>
         <View>
           <Text style={styles.welcome}>
-            {this.props.concert.artist}
+            A list of chats!
           </Text>
-          <Text>
-            Playing on {this.props.concert.day}, {this.props.concert.time} at {this.props.concert.location}!
-          </Text>
+          {this.props.chats.map(function(chat) {
+            return (
+              <Text key={chat.key}
+                    onPress={() => Actions.chatView({chat: chat})}>
+                Chat {chat.key} for concert {chat.concert.artist}
+              </Text>
+            )
+          })}
         </View>
       </MainLayout>
     )
   }
 }
 
-ConcertView.contextTypes = {
+ChatList.contextTypes = {
   store: React.PropTypes.object.isRequired
 }
 
-ConcertView.propTypes = {
+ChatList.propTypes = {
   routes: React.PropTypes.object,
-  concert: React.PropTypes.object.isRequired
+  chats: React.PropTypes.array.isRequired
 }
 
 const mapStateToProps = function(state) {
   return {
-    routes: state.routes
+    routes: state.routes,
+    chats: state.chats.chats
   }
 }
 
@@ -52,4 +59,4 @@ const styles = StyleSheet.create({
   },
 })
 
-module.exports = connect(mapStateToProps)(ConcertView)
+module.exports = connect(mapStateToProps)(ChatList)

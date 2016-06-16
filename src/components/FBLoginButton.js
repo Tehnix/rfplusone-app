@@ -39,7 +39,6 @@ class FBLoginButton extends Component {
         if (error) {
           // Handle the error...
         } else {
-          console.log(result)
           store.dispatch(setFacebookUserInformation(
             result.id,
             result.name,
@@ -65,7 +64,7 @@ class FBLoginButton extends Component {
           // Fetch the users facebook name
           this._fetchFBProfile(store)
           store.dispatch(successfulFBLogin(data.accessToken.toString()))
-          Actions.concertList()
+          Actions.pop()
         }
       )
     }
@@ -73,7 +72,6 @@ class FBLoginButton extends Component {
 
   _handleLogout(store, Actions) {
     store.dispatch(successfulFBLogout())
-    Actions.login()
   }
 
   render() {
