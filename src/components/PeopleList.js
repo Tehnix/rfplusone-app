@@ -11,25 +11,38 @@ class PeopleList extends Component {
 
   render() {
     const { store } = this.context
+    const filter = this.props.concerts[this.props.concertKey].status
     let peopleList
-    if (this.props.filter == 'plusOne') {
+    if (filter == 'group') {
+
+    } else if (filter == 'plusOne') {
       peopleList = this.props.people[this.props.concertKey].plusOne
     } else {
       peopleList = this.props.people[this.props.concertKey].friends
     }
+    let peopleComponents
+    if (filter != 'group') {
+      peopleComponents = (peopleList).map(function(person) {
+        return (
+          <View key={person.key} style={styles.personContainer}>
+            <Image style={styles.profilePicture}
+                   source={require('../../graphics/profileFiller.png')}/>
+            <Text style={styles.person}>
+              {person.name}
+            </Text>
+          </View>
+        )
+      })
+    } else {
+      peopleComponents = (
+        <Text>
+          Looking for an awesome group!
+        </Text>
+      )
+    }
     return (
       <View style={styles.container}>
-        {(peopleList).map(function(person) {
-          return (
-            <View key={person.key} style={styles.personContainer}>
-              <Image style={styles.profilePicture}
-                     source={require('../../graphics/profileFiller.png')}/>
-              <Text style={styles.person}>
-                {person.name}
-              </Text>
-            </View>
-          )
-        })}
+        {peopleComponents}
       </View>
     )
   }
@@ -43,13 +56,14 @@ PeopleList.propTypes = {
   routes: React.PropTypes.object,
   people: React.PropTypes.object.isRequired,
   concertKey: React.PropTypes.number.isRequired,
-  filter: React.PropTypes.string.isRequired,
+  concerts: React.PropTypes.object.isRequired,
 }
 
 const mapStateToProps = function(state) {
   return {
     routes: state.routes,
     people: state.people.people,
+    concerts: state.concerts.concerts,
   }
 }
 

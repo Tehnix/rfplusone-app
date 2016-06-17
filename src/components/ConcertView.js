@@ -42,8 +42,7 @@ class ConcertView extends Component {
            </View>
           </Image>
           <ConcertActions concertKey={this.props.concert.key}/>
-          <PeopleList filter={this.props.concert.status}
-                      concertKey={this.props.concert.key}/>
+          <PeopleList concertKey={this.props.concert.key}/>
         </View>
       </MainLayout>
     )
@@ -56,12 +55,14 @@ ConcertView.contextTypes = {
 
 ConcertView.propTypes = {
   routes: React.PropTypes.object,
-  concert: React.PropTypes.object.isRequired
+  concert: React.PropTypes.object.isRequired,
+  concerts: React.PropTypes.object.isRequired,
 }
 
 const mapStateToProps = function(state) {
   return {
-    routes: state.routes
+    routes: state.routes,
+    concerts: state.concerts.concerts,
   }
 }
 
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     paddingLeft: 3,
     paddingRight: 3,
-    height: 17,
     marginRight: 5,
   },
   concertInfoTop: {
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     paddingLeft: 3,
     paddingRight: 3,
-    height: 17,
     marginTop: 10,
     marginRight: 5,
   },

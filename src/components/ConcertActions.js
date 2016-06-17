@@ -11,26 +11,93 @@ import { setConcertStatus } from '../actions/Concerts'
 
 class ConcertActions extends Component {
 
-  render() {
-    const { store } = this.context
-    return (
+  _buttonDisplay(filter) {
+    const attendingText = 'Attending'
+    const plusOneText = '+1'
+    const groupText = '+8'
+    let buttons
+    if (filter == 'plusOne') {
+      return (
+        <View style={styles.container}>
+          <View style={styles.selected}>
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+                    containerStyle={{flex: 1}}
+                    style={styles.plusOne}>
+              {plusOneText}
+            </Button>
+          </View>
+          <View style={styles.notSelected}>
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.attending}>
+              {attendingText}
+            </Button>
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.group}>
+              {groupText}
+            </Button>
+          </View>
+        </View>
+      )
+    } else if (filter == 'group') {
+      return (
+        <View style={styles.container}>
+          <View style={styles.selected}>
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+                    containerStyle={{flex: 1}}
+                    style={styles.group}>
+              {groupText}
+            </Button>
+          </View>
+          <View style={styles.notSelected}>
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.plusOne}>
+              {plusOneText}
+            </Button>
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.attending}>
+              {attendingText}
+            </Button>
+          </View>
+        </View>
+      )
+    } else {
+      return (
         <View style={styles.container}>
           <View style={styles.selected}>
             <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
                     containerStyle={{flex: 1}}
                     style={styles.attending}>
-              Attending
+              {attendingText}
             </Button>
           </View>
           <View style={styles.notSelected}>
-            <Button containerStyle={{flex: 0.5}} style={styles.plusOne}>
-              +1
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.plusOne}>
+              {plusOneText}
             </Button>
-            <Button containerStyle={{flex: 0.5}} style={styles.group}>
-              +8
+            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.group}>
+              {groupText}
             </Button>
           </View>
         </View>
+      )
+    }
+  }
+
+  render() {
+    const { store } = this.context
+    const filter = this.props.concerts[this.props.concertKey].status
+    return (
+      <View>
+        {this._buttonDisplay(filter)}
+      </View>
     )
   }
 }
@@ -42,11 +109,13 @@ ConcertActions.contextTypes = {
 ConcertActions.propTypes = {
   routes: React.PropTypes.object,
   concertKey: React.PropTypes.number.isRequired,
+  concerts: React.PropTypes.object.isRequired,
 }
 
 const mapStateToProps = function(state) {
   return {
-    routes: state.routes
+    routes: state.routes,
+    concerts: state.concerts.concerts,
   }
 }
 

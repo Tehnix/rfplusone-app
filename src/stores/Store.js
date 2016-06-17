@@ -6,6 +6,6 @@ import * as reducers from '../reducers'
 const plusOneAppReducers = combineReducers(reducers)
 
 const store = createStore(plusOneAppReducers, undefined, autoRehydrate())
-persistStore(store, {storage: AsyncStorage}).purgeAll()
+persistStore(store, {storage: AsyncStorage})
 
 export default store

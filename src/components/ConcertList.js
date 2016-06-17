@@ -5,19 +5,12 @@ import {
   View,
   Image,
   StatusBar,
-  Button
+  TouchableHighlight
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
-import {
-  showChatActivity,
-  hideChatActivity,
-  setChatUnreadCount
-} from '../actions/Chats'
-
 import MainLayout from './MainLayout'
-import FBLoginButton from './FBLoginButton'
 
 class ConcertList extends Component {
   render() {
@@ -25,32 +18,43 @@ class ConcertList extends Component {
     const concerts = this.props.concerts
     return (
       <MainLayout>
-        <View>
-          <Text style={styles.welcome}>
-            A list of concerts!
-          </Text>
-          {Object.keys(concerts).map(function(key) {
+        <View style={styles.container}>
+          {Object.keys(concerts).map(function(key, iteratorCount) {
             const concert = concerts[key]
             return (
-              <Text key={concert.key}
-                    onPress={() => Actions.concertView({title: concert.artist, concert: concert})}>
-                Go see {concert.artist} on {concert.day}, {concert.time} at {concert.location}
-              </Text>
+              <TouchableHighlight key={concert.key}
+                                  style={styles.concertContainer}
+                                  onPress={() => Actions.concertView({title: concert.artist, concert: concert})}>
+                <Image style={styles.concertThumbnail}
+                       source={{uri: concert.picture.banner}}>
+               <View style={styles.concertInfoContainer}>
+                 <Text style={styles.concertInfoTop}>
+                   {concert.day.toUpperCase()}, {concert.time}
+                 </Text>
+               </View>
+               <View style={styles.concertInfoContainer}>
+                 <Text style={styles.concertInfo}>
+                   <Image style={styles.friendIcon}
+                          source={require('../../graphics/friendIcon.png')}/>
+                    {"  "}{concert.attending.friends} friends
+                 </Text>
+               </View>
+               <View style={styles.concertInfoContainer}>
+                 <Text style={styles.concertInfo}>
+                   <Image style={styles.friendIcon}
+                          source={require('../../graphics/friendIcon.png')}/>
+                    {"  "}{concert.attending.total} total
+                 </Text>
+               </View>
+                <View style={styles.concertNameContainer}>
+                  <Text style={styles.concertName}>
+                    {concert.artist}
+                  </Text>
+                </View>
+                </Image>
+              </TouchableHighlight>
             )
           })}
-          <Text onPress={() => this.props.showChatActivity()}>
-            Show chat activity!
-          </Text>
-          <Text onPress={() => this.props.hideChatActivity()}>
-            Hide chat activity!
-          </Text>
-          <Text onPress={() => this.props.setChatUnreadCount(0)}>
-            Set chat unread count to 0
-          </Text>
-          <Text onPress={() => this.props.setChatUnreadCount(15)}>
-            Set chat unread count to 15
-          </Text>
-          <FBLoginButton/>
         </View>
       </MainLayout>
     )
@@ -74,25 +78,60 @@ const mapStateToProps = function(state) {
 }
 
 const mapDispatchToProps = function(dispatch) {
-  return {
-    showChatActivity: () => {
-      dispatch(showChatActivity())
-    },
-    hideChatActivity: () => {
-      dispatch(hideChatActivity())
-    },
-    setChatUnreadCount: (count) => {
-      dispatch(setChatUnreadCount(count))
-    },
-  }
+  return {}
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(ConcertList)
 
 const styles = StyleSheet.create({
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  container: {
+    flex: 1,
+  },
+  concertContainer: {
+    flex: 0.5,
+    marginBottom: 2,
+  },
+  concertThumbnail: {
+    height: 130,
+  },
+  friendIcon: {
+    height: 10,
+    width: 10,
+    marginTop: 4,
+  },
+  concertInfoContainer: {
+    alignItems: 'flex-end',
+  },
+  concertInfo: {
+    fontSize: 11,
+    textAlign: 'right',
+    color: 'orange',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingLeft: 3,
+    paddingRight: 3,
+    marginRight: 5,
+    paddingTop: 3,
+  },
+  concertInfoTop: {
+    fontSize: 11,
+    textAlign: 'right',
+    color: 'orange',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingLeft: 3,
+    paddingRight: 3,
+    marginTop: 10,
+    marginRight: 5,
+  },
+  concertNameContainer: {
+    alignItems: 'flex-start',
+    position: 'absolute',
+    bottom: 5,
+    marginLeft: 5,
+  },
+  concertName: {
+    fontSize: 13,
+    textAlign: 'left',
+    color: 'orange',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
 })

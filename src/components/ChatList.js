@@ -10,6 +10,12 @@ import {
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
+import {
+  showChatActivity,
+  hideChatActivity,
+  setChatUnreadCount
+} from '../actions/Chats'
+
 import MainLayout from './MainLayout'
 
 class ChatList extends Component {
@@ -29,6 +35,18 @@ class ChatList extends Component {
               </Text>
             )
           })}
+          <Text onPress={() => this.props.showChatActivity()}>
+            Show chat activity!
+          </Text>
+          <Text onPress={() => this.props.hideChatActivity()}>
+            Hide chat activity!
+          </Text>
+          <Text onPress={() => this.props.setChatUnreadCount(0)}>
+            Set chat unread count to 0
+          </Text>
+          <Text onPress={() => this.props.setChatUnreadCount(15)}>
+            Set chat unread count to 15
+          </Text>
         </View>
       </MainLayout>
     )
@@ -51,7 +69,21 @@ const mapStateToProps = function(state) {
   }
 }
 
-module.exports = connect(mapStateToProps)(ChatList)
+const mapDispatchToProps = function(dispatch) {
+  return {
+    showChatActivity: () => {
+      dispatch(showChatActivity())
+    },
+    hideChatActivity: () => {
+      dispatch(hideChatActivity())
+    },
+    setChatUnreadCount: (count) => {
+      dispatch(setChatUnreadCount(count))
+    },
+  }
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ChatList)
 
 const styles = StyleSheet.create({
   welcome: {
