@@ -1,7 +1,7 @@
 // Facebook/login related actions
 export const FB_LOGIN_ATTEMPT = 'FB_LOGIN_ATTEMPT'
 export const FB_LOGOUT = 'FB_LOGOUT'
-export const SET_FB_NAME = 'SET_FB_NAME'
+export const SET_FB_INFO = 'SET_FB_INFO'
 
 export const FB_LOGIN_STATE = {
   NOT_LOGGED_IN: 'NOT_LOGGED_IN',
@@ -10,10 +10,11 @@ export const FB_LOGIN_STATE = {
   LOGIN_CANCELED: 'LOGIN_CANCELED'
 }
 
-export function successfulFBLogin(accessToken) {
+export function successfulFBLogin(accessToken, sessionToken) {
   return {
     type: FB_LOGIN_ATTEMPT,
     accessToken: accessToken,
+    sessionToken: sessionToken,
     loginState: FB_LOGIN_STATE.LOGGED_IN
   }
 }
@@ -30,6 +31,7 @@ export function cancelledFBLogin() {
   return {
     type: FB_LOGIN_ATTEMPT,
     accessToken: '',
+    sessionToken: '',
     loginState: FB_LOGIN_STATE.LOGIN_CANCELED
   }
 }
@@ -38,6 +40,7 @@ export function errorFBLogin() {
   return {
     type: FB_LOGIN_ATTEMPT,
     accessToken: '',
+    sessionToken: '',
     loginState: FB_LOGIN_STATE.LOGIN_ERROR
   }
 }
@@ -51,7 +54,7 @@ export function successfulFBLogout() {
 
 export function setFacebookUserInformation(fbID, fbFullName, fbFirstName, fbMiddleName, fbLastName, fbEmail) {
   return {
-    type: SET_FB_NAME,
+    type: SET_FB_INFO,
     fbID: fbID,
     fbFullName: fbFullName,
     fbFirstName: fbFirstName,

@@ -16,6 +16,14 @@ import { FB_LOGIN_STATE } from '../actions/FBLogin'
 class Login extends Component {
   render() {
     const { store } = this.context
+    let failedLoginNotification
+    if (this.props.loginState == FB_LOGIN_STATE.LOGIN_ERROR) {
+      failedLoginNotification = (
+        <Text style={styles.failedLogin}>
+          Seems the login failed on our end :( Try and log out from facebook and back in again
+        </Text>
+      )
+    }
     return (
       <Image
           source={require('../../graphics/loginBackground.png')}
@@ -24,6 +32,7 @@ class Login extends Component {
           background color="black"
           barStyle="light-content"/>
         <FBLoginButton/>
+        {failedLoginNotification}
       </Image>
     )
   }
@@ -54,5 +63,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: null,
     height: null,
+  },
+  failedLogin: {
+    backgroundColor: '#F6DDDD',
+    borderColor: '#F2C9D0',
+    color: '#B83538',
+    borderWidth: 2,
+    margin: 10,
+    padding: 7,
+    marginBottom: -61,
   },
 })

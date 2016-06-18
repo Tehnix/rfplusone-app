@@ -8,7 +8,7 @@
   "dependencies": {
     "immutable": "^3.8.1",
     "react": "^15.1.0",
-    "react-native": "0.27.1",
+    "react-native": "0.27.2",
     "react-native-button": "^1.6.0",
     "react-native-fbsdk": "^0.2.1",
     "react-native-router-flux": "^3.30.0",
@@ -16,9 +16,7 @@
     "react-router": "^2.4.1",
     "redux": "^3.5.2",
     "redux-action-buffer": "^1.0.0",
-    "redux-immutablejs": "0.0.8",
     "redux-persist": "^3.2.2",
-    "redux-thunk": "^2.1.0",
     "rnpm": "^1.8.0"
   },
   "devDependencies": {

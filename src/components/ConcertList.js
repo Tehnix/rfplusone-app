@@ -10,9 +10,29 @@ import {
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
+import { ENDPOINTS } from '../stores/Constants'
+
 import MainLayout from './MainLayout'
 
 class ConcertList extends Component {
+  _updateConcertList(store, Actions) {
+    fetch(ENDPOINTS.exchangeTokenToSession)
+    .then((response) => response.json())
+    .then((responseData) => {
+      if (responseData.sessionToken) {
+        store.dispatch(
+          successfulFBLogin(
+            data.accessToken.toString(),
+            responseData.sessionToken
+        ))
+      }
+    })
+    .catch((error) => {
+      console.warn(error)
+    })
+    .done()
+  }
+
   render() {
     const { store } = this.context
     const concerts = this.props.concerts

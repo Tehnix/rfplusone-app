@@ -64,31 +64,30 @@ class ConcertActions extends Component {
           </View>
         </View>
       )
-    } else {
-      return (
-        <View style={styles.container}>
-          <View style={styles.selected}>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
-                    containerStyle={{flex: 1}}
-                    style={styles.attending}>
-              {attendingText}
-            </Button>
-          </View>
-          <View style={styles.notSelected}>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
-                    containerStyle={{flex: 0.5}}
-                    style={styles.plusOne}>
-              {plusOneText}
-            </Button>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
-                    containerStyle={{flex: 0.5}}
-                    style={styles.group}>
-              {groupText}
-            </Button>
-          </View>
-        </View>
-      )
     }
+    return (
+      <View style={styles.container}>
+        <View style={styles.selected}>
+          <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
+                  containerStyle={{flex: 1}}
+                  style={styles.attending}>
+            {attendingText}
+          </Button>
+        </View>
+        <View style={styles.notSelected}>
+          <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+                  containerStyle={{flex: 0.5}}
+                  style={styles.plusOne}>
+            {plusOneText}
+          </Button>
+          <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+                  containerStyle={{flex: 0.5}}
+                  style={styles.group}>
+            {groupText}
+          </Button>
+        </View>
+      </View>
+    )
   }
 
   render() {

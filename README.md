@@ -109,3 +109,7 @@ Open the `/android` folder in Android Studio as an existing Android Studio proje
 
 # Setting up the iOS project
 Open the `/ios/PlusOne.xcodeproj` project with xCode.
+
+
+# Complains about missing module with graphics
+Related to [https://github.com/facebook/react-native/issues/4968](https://github.com/facebook/react-native/issues/4968). Only fix that worked for me, personally, was to rebuild in Xcode.

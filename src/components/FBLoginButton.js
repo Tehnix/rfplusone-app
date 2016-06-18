@@ -6,6 +6,8 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+
+import { ENDPOINTS } from '../stores/Constants'
 import {
   successfulFBLogin,
   unsuccessfulFBLogin,
@@ -52,6 +54,25 @@ class FBLoginButton extends Component {
     )).start()
   }
 
+  // Exchange the facebook access token with a session token
+  _exchangeTokenToSession(store, Actions, accessToken) {
+    fetch(ENDPOINTS.exchangeTokenToSession)
+    .then((response) => response.json())
+    .then((responseData) => {
+      if (responseData.sessionToken) {
+        store.dispatch(successfulFBLogin(
+          accessToken,
+          responseData.sessionToken
+        ))
+        Actions.pop()
+      }
+    })
+    .catch((error) => {
+      store.dispatch(errorFBLogin())
+    })
+    .done()
+  }
+
   // Handle the login result, and store the access token if successful
   _handleLogin(store, Actions, error, result) {
     if (error) {
@@ -63,13 +84,18 @@ class FBLoginButton extends Component {
         (data) => {
           // Fetch the users facebook name
           this._fetchFBProfile(store)
-          store.dispatch(successfulFBLogin(data.accessToken.toString()))
-          Actions.pop()
+          // Exchange the Facebook access token for a session token
+          this._exchangeTokenToSession(
+            store,
+            Actions,
+            data.accessToken.toString()
+          )
         }
       )
     }
   }
 
+  // Handle a logout and wipe the session/accesstoken/facebook info
   _handleLogout(store, Actions) {
     store.dispatch(successfulFBLogout())
   }

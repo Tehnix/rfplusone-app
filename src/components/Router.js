@@ -26,8 +26,8 @@ class Routing extends Component {
       <RouterWithRedux>
         <Scene key="root"
                navigationBarStyle={styles.navigationBar}
-               titleStyle={styles.navigationTitle}
-               backButtonImage={require('../../graphics/backButtonWhite.png')}>
+               backButtonImage={require('../../graphics/backButtonWhite.png')}
+               titleStyle={styles.navigationTitle}>
           <Scene key="concertList"
                  component={ConcertList}
                  title="Concerts"

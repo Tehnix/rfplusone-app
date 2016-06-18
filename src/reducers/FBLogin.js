@@ -1,12 +1,13 @@
 import {
   FB_LOGIN_ATTEMPT,
   FB_LOGOUT,
-  SET_FB_NAME,
+  SET_FB_INFO,
   FB_LOGIN_STATE
 } from '../actions/FBLogin'
 
 const initialState = {
   accessToken: '',
+  sessionToken: '',
   loginState: FB_LOGIN_STATE.NOT_LOGGED_IN,
   facebookID: '',
   facebookFullName: '',
@@ -21,11 +22,13 @@ export function login(state = initialState, action) {
   case FB_LOGIN_ATTEMPT:
     return Object.assign({}, state, {
       accessToken: action.accessToken,
+      sessionToken: action.sessionToken,
       loginState: action.loginState
     })
   case FB_LOGOUT:
     return Object.assign({}, state, {
       accessToken: '',
+      sessionToken: '',
       loginState: action.loginState,
       facebookID: '',
       facebookFullName: '',
@@ -34,7 +37,7 @@ export function login(state = initialState, action) {
       facebookLastName: '',
       facebookEmail: '',
     })
-  case SET_FB_NAME:
+  case SET_FB_INFO:
     return Object.assign({}, state, {
       facebookID: action.fbID,
       facebookFullName: action.fbFullName,

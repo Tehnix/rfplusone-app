@@ -65,7 +65,7 @@ typedef NS_ENUM(NSInteger, FBSDKErrorCode)
 
   /*!
    @abstract An endpoint that returns a binary response was used with FBSDKGraphRequestConnection.
-   @discussion Endpoints that return image/jpg, etc. should be accessed using NSURLRequest
+   @discussion ENDPOINTS that return image/jpg, etc. should be accessed using NSURLRequest
    */
   FBSDKGraphRequestNonTextMimeTypeReturnedErrorCode,
 

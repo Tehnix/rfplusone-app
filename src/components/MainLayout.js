@@ -7,15 +7,26 @@ import {
   StatusBar,
   Button,
   ScrollView,
+  RefreshControl,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
 import { REHYDRATION_STATE } from '../actions/Persist'
 import { FB_LOGIN_STATE } from '../actions/FBLogin'
+import {
+  REFRESH_STATE,
+  startRefreshing,
+  stopRefreshing,
+  refreshContent
+} from '../actions/Refresh'
 import { CHAT_ICON_STATE } from '../actions/Chats'
 
 class MainLayout extends Component {
+  _onRefresh(store) {
+    refreshContent(store, this.props.routes.scene.sceneKey, this.props.routes)
+  }
+
   _setChatActivityIcon(nextProps, props) {
     if (nextProps.routes.scene.sceneKey == 'chatList' ||
         nextProps.routes.scene.sceneKey == 'chatView') {
@@ -56,10 +67,17 @@ class MainLayout extends Component {
   }
 
   render() {
+    const { store } = this.context
     return (
       <ScrollView ref='scrollView'
                   keyboardDismissMode='interactive'
-                  style={styles.mainContainer}>
+                  style={styles.mainContainer}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={this.props.refreshBool}
+                      onRefresh={this._onRefresh.bind(this, store)}
+                    />
+                  }>
         <StatusBar
           background color="black"
           barStyle="light-content"/>
@@ -82,6 +100,8 @@ MainLayout.propTypes = {
   chatUnreadCounter: React.PropTypes.number.isRequired,
   chatIconState: React.PropTypes.string.isRequired,
   loginState: React.PropTypes.string.isRequired,
+  refreshing: React.PropTypes.string.isRequired,
+  refreshBool: React.PropTypes.bool.isRequired
 }
 
 const mapStateToProps = function(state) {
@@ -91,6 +111,8 @@ const mapStateToProps = function(state) {
     chatUnreadCounter: state.chats.totalUnreadCount,
     chatIconState: state.chats.chatIconState,
     loginState: state.login.loginState,
+    refreshing: state.refresh.refreshing,
+    refreshBool: state.refresh.refreshBool,
   }
 }
 
