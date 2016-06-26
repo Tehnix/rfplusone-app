@@ -3,6 +3,9 @@ export const SHOW_CHAT_ACTIVITY = 'SHOW_CHAT_ACTIVITY'
 export const HIDE_CHAT_ACTIVITY = 'HIDE_CHAT_ACTIVITY'
 export const SET_CHAT_UNREAD_COUNT = 'SET_CHAT_UNREAD_COUNT'
 export const SET_CHAT_STATE = 'SET_CHAT_STATE'
+export const NEW_CHAT_MESSAGE = 'NEW_CHAT_MESSAGE'
+export const NEW_CHAT_MESSAGES = 'NEW_CHAT_MESSAGES'
+export const SET_POLL_TIMER = 'SET_POLL_TIMER'
 
 export const CHAT_TYPES = {
   SINGLE_CHAT: 'SINGLE_CHAT',
@@ -54,5 +57,28 @@ export function setChatState(chatId, state) {
     type: SET_CHAT_STATE,
     chatId: chatId,
     chatState: state
+  }
+}
+
+export function newChatMessage(chatId, message) {
+  return {
+    type: NEW_CHAT_MESSAGE,
+    chatId: chatId,
+    message: message
+  }
+}
+
+export function newChatMessages(chatId, messages) {
+  return {
+    type: NEW_CHAT_MESSAGES,
+    chatId: chatId,
+    messages: messages
+  }
+}
+
+export function setPollingTimer(timer) {
+  return {
+    type: SET_POLL_TIMER,
+    timer: timer
   }
 }

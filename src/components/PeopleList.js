@@ -98,7 +98,12 @@ class PeopleList extends Component {
                                     concert_id: concertId,
                                   })
                                 })
-                                .then((response) => response.json())
+                                .then((response) => {
+                                  console.log(response)
+                                  if (response.ok == 200) {
+                                    response.json()
+                                  }
+                                })
                                 .then((responseData) => {
                                   fetchChatList(sessionToken, store.dispatch)
                                   Actions.chatList()

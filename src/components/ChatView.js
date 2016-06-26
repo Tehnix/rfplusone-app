@@ -12,8 +12,12 @@ import {
   Dimensions,
 } from 'react-native'
 import { connect } from 'react-redux'
+import { ENDPOINTS } from '../stores/Constants'
 
-import { setChatState } from '../actions/Chats'
+import {
+  setChatState,
+  newChatMessage,
+} from '../actions/Chats'
 import {
   getConcertFromId,
   weekdayFromDate,
@@ -35,196 +39,87 @@ if (Platform.OS === 'android') {
 class ChatView extends Component {
   componentDidMount() {
     this._isMounted = true
-
-    // setTimeout(() => {
-    //   this.setState({
-    //     typingMessage: 'React-Bot is typing a message...',
-    //   })
-    // }, 1000) // simulating network
-
-    // setTimeout(() => {
-    //   this.setState({
-    //     typingMessage: '',
-    //   })
-    // }, 3000) // simulating network
-
-
-    // setTimeout(() => {
-    //   this.handleReceive({
-    //     text: 'Hello Awesome Developer',
-    //     name: 'React-Bot',
-    //     image: {uri: 'https://facebook.github.io/react/img/logo_og.png'},
-    //     position: 'left',
-    //     date: new Date(),
-    //     uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-    //   })
-    // }, 3300) // simulating network
   }
 
   componentWillUnmount() {
     this._isMounted = false
   }
 
-  getInitialMessages() {
-    return [
-      {
-        text: 'Let Mads know where to meet you for MØ at 22:00 on Saturday',
-        name: '',
-        image: {uri: null},
-        position: 'center',
-        date: new Date(2016, 7, 2, 12, 24),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-      {
-        text: 'Hey! :)',
-        name: 'Mads',
-        image: {uri: 'https://s3.eu-central-1.amazonaws.com/plusonedk/public/profile_pictures/person1.jpg'},
-        position: 'left',
-        date: new Date(2016, 7, 2, 12, 25),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-      {
-        text: 'Where do you wanna meet?',
-        name: 'Mads',
-        image: {uri: 'https://s3.eu-central-1.amazonaws.com/plusonedk/public/profile_pictures/person1.jpg'},
-        position: 'left',
-        date: new Date(2016, 7, 2, 12, 26),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-      {
-        text: 'Hey! Let\'s meet near the bar on the right? :)',
-        name: 'Christian',
-        image: null,
-        position: 'right',
-        date: new Date(2016, 7, 2, 12, 29),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-      {
-        text: 'Sounds good to me, see you there!',
-        name: 'Mads',
-        image: {uri: 'https://s3.eu-central-1.amazonaws.com/plusonedk/public/profile_pictures/person1.jpg'},
-        position: 'left',
-        date: new Date(2016, 7, 2, 12, 30),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-      {
-        text: 'Great! Can\'t wait :D',
-        name: 'Christian',
-        image: null,
-        position: 'right',
-        date: new Date(2016, 7, 2, 12, 31),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-    ]
-  }
-
-  setMessageStatus(uniqueId, status) {
-    let messages = []
-    let found = false
-
-    for (let i = 0; i < this._messages.length; i++) {
-      if (this._messages[i].uniqueId === uniqueId) {
-        let clone = Object.assign({}, this._messages[i])
-        clone.status = status
-        messages.push(clone)
-        found = true
-      } else {
-        messages.push(this._messages[i])
-      }
-    }
-
-    if (found === true) {
-      this.setMessages(messages)
-    }
-  }
-
-  setMessages(messages) {
-    this._messages = messages
-
-    // append the message
-    this.setState({
-      messages: messages,
-    })
-  }
-
   handleSend(message = {}) {
-
-    // Your logic here
-    // Send message.text to your server
-
-    message.uniqueId = Math.round(Math.random() * 10000) // simulating server-side unique id generation
-    this.setMessages(this._messages.concat(message))
-
-    // mark the sent message as Seen
-    setTimeout(() => {
-      this.setMessageStatus(message.uniqueId, 'Seen') // here you can replace 'Seen' by any string you want
-    }, 1000)
-
-    // if you couldn't send the message to your server :
-    // this.setMessageStatus(message.uniqueId, 'ErrorButton');
+    const { store } = this.context
+    const uniqueId = Math.round(Math.random() * 10000)
+    message.uniqueId = uniqueId
+    fetch(ENDPOINTS.message(this.props.chat.id), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Token token=' + this.props.sessionToken
+      },
+      body: JSON.stringify({
+        message: {
+          text: message.text
+        }
+      })
+    })
+    .then((response) => response.json())
+    .then((responseData) => {})
+    .catch((error) => {})
+    .done()
+    store.dispatch(newChatMessage(this.props.chat.id, message))
   }
 
   handleReceive(message = {}) {
+    const { store } = this.context
     // make sure that your message contains :
     // text, name, image, position: 'left', date, uniqueId
-    this.setMessages(this._messages.concat(message))
+    const uniqueId = Math.round(Math.random() * 10000)
+    message.uniqueId = uniqueId
+    store.dispatch(newChatMessage(this.props.chat.id, message))
   }
 
   onErrorButtonPress(message = {}) {
     // Your logic here
     // re-send the failed message
-
-    // remove the status
-    this.setMessageStatus(message.uniqueId, '')
+    // Remove the status
+    // this.setMessageStatus(message.uniqueId, '')
   }
 
-  // will be triggered when the Image of a row is touched
+  // Will be triggered when the Image of a row is touched
   onImagePress(message = {}) {
     // Your logic here
     // Eg: Navigate to the user profile
   }
 
-  _concatenateParticipants(participants) {
-    let names = []
+  _generateWelcomeMessage(participants, concert) {
+    let namesArray = []
     const arrayLength = participants.length
     for (let i = 0; i < arrayLength; i++) {
       const participant = participants[i]
-      names.push(participant.name.split(' ')[0])
+      namesArray.push(participant.name.split(' ')[0])
     }
-    return names.join(', ')
-  }
-
-  _generateWelcomeMessage(participants, concert) {
-    const names = this._concatenateParticipants(participants)
+    const names = namesArray.join(', ')
     const startDate = new Date(concert.start_time)
     const day = weekdayFromDate(startDate)
     const time = getHourMinutesFromDate(startDate)
-    return {
+    const welcomeMessage = {
       text: 'Let ' + names + ' know where to meet you for ' + concert.artist + ' at ' + time + ', ' + day + ' on ' + concert.venue,
       name: '',
       image: {uri: null},
       position: 'center',
-      date: new Date(),
-      uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
+      date: new Date('1992-12-22'),
+      uniqueId: 1, // simulating server-side unique id generation
     }
+    return welcomeMessage
   }
 
   render() {
     const { store } = this.context
     const concert = getConcertFromId(this.props.chat.concert_id, this.props.concerts)
-    let chatState
-    if (this.props.chatState[this.props.chat.id]) {
-      chatState = this.props.chatState[this.props.chat.id]
-    } else {
-      chatState = {
-        messages: [
-          this._generateWelcomeMessage(this.props.chat.participants, concert)
-        ],
-        isLoadingEarlierMessages: false,
-        typingMessage: '',
-        allLoaded: true,
-      }
-      // store.dispatch(setChatState(this.props.chatId, chatState))
+    const chatState = this.props.chatState[this.props.chat.id]
+    let messages = [this._generateWelcomeMessage(this.props.chat.participants, concert)]
+    if (chatState.messages) {
+      messages = messages.concat(chatState.messages)
     }
     return (
       <GiftedMessenger
@@ -248,7 +143,7 @@ class ChatView extends Component {
         }}
 
         autoFocus={false}
-        messages={chatState.messages}
+        messages={messages}
         handleSend={this.handleSend.bind(this)}
         onErrorButtonPress={this.onErrorButtonPress.bind(this)}
         maxHeight={Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT}
@@ -310,6 +205,7 @@ ChatView.contextTypes = {
 
 ChatView.propTypes = {
   routes: React.PropTypes.object,
+  sessionToken: React.PropTypes.string.isRequired,
   chat: React.PropTypes.object.isRequired,
   chatState: React.PropTypes.object.isRequired,
   concerts: React.PropTypes.array.isRequired,
@@ -320,6 +216,7 @@ ChatView.propTypes = {
 const mapStateToProps = function(state) {
   return {
     routes: state.routes,
+    sessionToken: state.login.sessionToken,
     concerts: state.concerts.concerts,
     chatState: state.chats.chatState,
     facebookFullName: state.login.facebookFullName,

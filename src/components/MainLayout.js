@@ -22,8 +22,16 @@ import {
   stopRefreshing,
   refreshContent,
   fetchConcertList,
+  fetchChatList,
+  fetchConcert,
+  fetchChatMessages,
 } from '../actions/Refresh'
-import { updatingConcertList } from '../actions/Concerts'
+import {
+  updatingConcertList,
+} from '../actions/Concerts'
+import {
+  setPollingTimer,
+} from '../actions/Chats'
 
 class MainLayout extends Component {
   _onRefresh(store) {
@@ -75,9 +83,41 @@ class MainLayout extends Component {
     // Check if we need to load concerts
     if (nextProps.updatingConcerts == false && !nextProps.concerts.length &&
         nextProps.loginState == FB_LOGIN_STATE.LOGGED_IN) {
-      store.dispatch(updatingConcertList())
       fetchConcertList(nextProps.sessionToken, store.dispatch)
+      store.dispatch(updatingConcertList())
     }
+    if (this.props.routes.scene.sceneKey != 'chatList' && nextProps.routes.scene.sceneKey == 'chatList') {
+      fetchChatList(nextProps.sessionToken, store.dispatch)
+    }
+    if (this.props.routes.scene.sceneKey != 'concertView' && nextProps.routes.scene.sceneKey == 'concertView') {
+      const concertId = nextProps.routes.scene.concert.id
+      fetchConcert(nextProps.sessionKey, store.dispatch, concertId)
+    }
+    if (nextProps.routes.scene.sceneKey != 'chatView') {
+      if (nextProps.pollForMessagesTimer) {
+        clearTimeout(nextProps.pollForMessagesTimer)
+      }
+    }
+    if (this.props.routes.scene.sceneKey != 'chatView' && nextProps.routes.scene.sceneKey == 'chatView') {
+      // Start polling for new messages: pollForMessagesTimer
+      if (nextProps.pollForMessagesTimer) {
+        clearTimeout(nextProps.pollForMessagesTimer)
+      }
+      const chatId = nextProps.routes.scene.chat.id
+      fetchChatMessages(nextProps.sessionToken, store.dispatch, chatId)
+      this._pollForMessages(this._pollForMessages, store.dispatch, chatId, nextProps)
+    }
+  }
+
+  _pollForMessages(pollForMessages, dispatch, chatId, nextProps) {
+    if (nextProps.pollForMessagesTimer) {
+      clearTimeout(nextProps.pollForMessagesTimer)
+    }
+    const newPollForMessagesTimer = setTimeout(() => {
+      fetchChatMessages(nextProps.sessionToken, dispatch, chatId)
+      pollForMessages(pollForMessages, dispatch, chatId, nextProps)
+    }, 5000)
+    dispatch(setPollingTimer(newPollForMessagesTimer))
   }
 
   render() {
@@ -125,6 +165,7 @@ MainLayout.propTypes = {
   refreshBool: React.PropTypes.bool.isRequired,
   concerts: React.PropTypes.array.isRequired,
   updatingConcerts: React.PropTypes.bool.isRequired,
+  pollForMessagesTimer: React.PropTypes.number.isRequired,
 }
 
 const mapStateToProps = function(state) {
@@ -139,6 +180,7 @@ const mapStateToProps = function(state) {
     refreshBool: state.refresh.refreshBool,
     concerts: state.concerts.concerts,
     updatingConcerts: state.concerts.updatingConcerts,
+    pollForMessagesTimer: state.chats.pollForMessagesTimer,
   }
 }
 

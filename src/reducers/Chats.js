@@ -4,6 +4,9 @@ import {
   HIDE_CHAT_ACTIVITY,
   SET_CHAT_UNREAD_COUNT,
   SET_CHAT_STATE,
+  NEW_CHAT_MESSAGE,
+  NEW_CHAT_MESSAGES,
+  SET_POLL_TIMER,
   CHAT_TYPES,
   CHAT_ICON_STATE
 } from '../actions/Chats'
@@ -13,6 +16,7 @@ const initialState = {
   totalUnreadCount: 0,
   chats: [],
   chatState: {},
+  pollForMessagesTimer: 0,
 }
 
 export function chats(state = initialState, action) {
@@ -43,8 +47,41 @@ export function chats(state = initialState, action) {
       ...state,
       chatState: {
         ...state.chatState,
-        [action.chatId]: action.state
+        [action.chatId]: action.chatState
       }
+    }
+  case NEW_CHAT_MESSAGE:
+    let newMessages
+    if (state.chatState[action.chatId].messages) {
+      newMessages = state.chatState[action.chatId].messages.concat(action.message)
+    } else {
+      newMessages = [action.message]
+    }
+    return {
+      ...state,
+      chatState: {
+        ...state.chatState,
+        [action.chatId]: {
+          ...state.chatState[action.chatId],
+          messages: newMessages
+        }
+      }
+    }
+  case NEW_CHAT_MESSAGES:
+    return {
+      ...state,
+      chatState: {
+        ...state.chatState,
+        [action.chatId]: {
+          ...state.chatState[action.chatId],
+          messages: action.messages
+        }
+      }
+    }
+  case SET_POLL_TIMER:
+    return {
+      ...state,
+      pollForMessagesTimer: action.timer
     }
   default:
     return state

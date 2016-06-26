@@ -35,14 +35,18 @@ class Routing extends Component {
                  hideBackImage={true}
                  rightButtonImage={require('../../graphics/chatIcon.png')}
                  rightButtonIconStyle={styles.chatIcon}
-                 onRight={()=>Actions.chatList()}
+                 onRight={()=>{
+                   Actions.chatList()
+                 }}
                  initial={true}/>
           <Scene key="concertView"
                  component={ConcertView}
                  title="Concerts View"
                  rightButtonImage={require('../../graphics/chatIcon.png')}
                  rightButtonIconStyle={styles.chatIcon}
-                 onRight={()=>Actions.chatList()}/>
+                 onRight={()=>{
+                   Actions.chatList()
+                 }}/>
           <Scene key="chatList" component={ChatList} title="Chats"/>
           <Scene key="chatView" component={ChatView} title="Chat"/>
           <Scene key="login"

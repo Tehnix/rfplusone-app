@@ -22,4 +22,7 @@ export const ENDPOINTS = {
   chat: (chatId) => {
     return hostname + '/chats/' + chatId.toString()
   },
+  message: (chatId) => {
+    return hostname + '/chats/' + chatId.toString() + '/messages'
+  },
 }

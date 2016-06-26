@@ -4,7 +4,8 @@ import { updateAttendeesList } from './Attendees'
 import { setConcertInterest } from './Interest'
 import {
   updateChatList,
-  setChatUnreadCount
+  setChatUnreadCount,
+  newChatMessages,
 } from './Chats'
 
 export const SET_REFRESHING = 'SET_REFRESHING'
@@ -41,9 +42,6 @@ export function refreshContent(sessionKey, dispatch, sceneKey, routes) {
   } else if (sceneKey == 'chatList') {
     dispatch(startRefreshing())
     fetchChatList(sessionKey, dispatch)
-  } else if (sceneKey == 'chatView') {
-    const concertKey = routes.scene.chat.key
-    console.log('Refreshing chat view with key = ' + concertKey.toString())
   }
 }
 
@@ -100,14 +98,12 @@ export function fetchChatList(sessionKey, dispatch) {
   .then((response) => response.json())
   .then((responseData) => {
     if (responseData) {
-      console.log(responseData)
       // Count the unread messages
       let unreadCount = 0
       if (responseData.length) {
         const arrayLength = responseData.length
         for (let i = 0; i < arrayLength; i++) {
           const chat = responseData[i]
-          console.log(chat)
           if (chat.unread_count && chat.unread_count !== null) {
             unreadCount += chat.unread_count
           }
@@ -115,6 +111,29 @@ export function fetchChatList(sessionKey, dispatch) {
       }
       dispatch(updateChatList(responseData))
       dispatch(setChatUnreadCount(unreadCount))
+    }
+  })
+  .catch((error) => {
+    console.warn(error)
+  })
+  .done(
+    dispatch(stopRefreshing())
+  )
+}
+
+export function fetchChatMessages(sessionKey, dispatch, chatId) {
+  fetch(ENDPOINTS.message(chatId), {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Token token=' + sessionKey
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    if (responseData) {
+      console.log('Logging new messages from chat: ' + chatId.toString())
+      console.log(responseData)
+      dispatch(newChatMessages(chatId, responseData))
     }
   })
   .catch((error) => {

@@ -14,10 +14,14 @@ import { Actions } from 'react-native-router-flux'
 import {
   showChatActivity,
   hideChatActivity,
-  setChatUnreadCount
+  setChatUnreadCount,
+  setChatState,
 } from '../actions/Chats'
-
-import { getConcertFromId } from '../Utility'
+import {
+  getConcertFromId,
+  weekdayFromDate,
+  getHourMinutesFromDate,
+} from '../Utility'
 
 import MainLayout from './MainLayout'
 import FBLoginButton from './FBLoginButton'
@@ -37,11 +41,25 @@ class ChatList extends Component {
     return names
   }
 
+  _initChatState(dispatch, chatState, chatId) {
+    if (!chatState[chatId]) {
+      const chatState = {
+        messages: [],
+        isLoadingEarlierMessages: false,
+        typingMessage: '',
+        allLoaded: true,
+      }
+      dispatch(setChatState(chatId, chatState))
+    }
+  }
+
   render() {
     const { store } = this.context
     const sessionToken = this.props.sessionToken
     const concerts = this.props.concerts
+    const chatState = this.props.chatState
     const concatenateParticipants = this._concatenateParticipants
+    const initChatState = this._initChatState
     return (
       <MainLayout>
         <View style={styles.container}>
@@ -67,7 +85,10 @@ class ChatList extends Component {
             return (
               <TouchableOpacity key={chat.id}
                                   style={styles.chatItemContainer}
-                                  onPress={() => Actions.chatView({title: titleName, chat: chat, concert: concert})}>
+                                  onPress={() => {
+                                    initChatState(store.dispatch, chatState, chat.id, chat.participants, concert)
+                                    Actions.chatView({title: titleName, chat: chat, concert: concert})
+                                  }}>
                 <View numberOfLines={1} style={styles.chatItemContainer}>
                   <Image style={styles.chatPicture}
                          source={{uri: concert.images[0].url}}/>
@@ -97,6 +118,7 @@ ChatList.contextTypes = {
 ChatList.propTypes = {
   routes: React.PropTypes.object,
   chats: React.PropTypes.array.isRequired,
+  chatState: React.PropTypes.object.isRequired,
   concerts: React.PropTypes.array.isRequired,
   sessionToken: React.PropTypes.string.isRequired,
 }
@@ -105,6 +127,7 @@ const mapStateToProps = function(state) {
   return {
     routes: state.routes,
     chats: state.chats.chats,
+    chatState: state.chats.chatState,
     concerts: state.concerts.concerts,
     sessionToken: state.login.sessionToken,
   }
