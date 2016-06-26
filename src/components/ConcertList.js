@@ -72,7 +72,7 @@ class ConcertList extends Component {
                                     onPress={() => {
                                       fetchConcert(sessionToken, store.dispatch, concert.id)
                                       Actions.concertView({title: concert.artist, concert: concert})
-                                  }}>
+                                    }}>
                   <Image style={styles.concertThumbnail}
                          source={{uri: concert.images[0].url}}>
                  <View style={styles.concertInfoContainer}>

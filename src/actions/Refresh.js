@@ -52,9 +52,13 @@ export function fetchConcertList(sessionKey, dispatch) {
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+  return response.json()
+})
   .then((responseData) => {
-    if (responseData.length > 0) {
+    if (responseData.error) {
+      // Handle errors here...
+    } else if (responseData.length > 0) {
       dispatch(updateConcertList(responseData))
     }
   })
@@ -73,9 +77,13 @@ export function fetchConcert(sessionKey, dispatch, concertId) {
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+  return response.json()
+})
   .then((responseData) => {
-    if (responseData) {
+    if (responseData.error) {
+      // Handle errors here...
+    } else if (responseData) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
@@ -95,9 +103,13 @@ export function fetchChatList(sessionKey, dispatch) {
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+  return response.json()
+})
   .then((responseData) => {
-    if (responseData) {
+    if (responseData.error) {
+      // Handle errors here...
+    } else if (responseData) {
       // Count the unread messages
       let unreadCount = 0
       if (responseData.length) {
@@ -128,11 +140,13 @@ export function fetchChatMessages(sessionKey, dispatch, chatId) {
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+  return response.json()
+})
   .then((responseData) => {
-    if (responseData) {
-      console.log('Logging new messages from chat: ' + chatId.toString())
-      console.log(responseData)
+    if (responseData.error) {
+      // Handle errors here...
+    } else if (responseData) {
       dispatch(newChatMessages(chatId, responseData))
     }
   })

@@ -70,7 +70,9 @@ class FBLoginButton extends Component {
         }
       })
     })
-    .then((response) => response.json())
+    .then((response) => {
+      return response.json()
+    })
     .then((responseData) => {
       if (responseData.error) {
         store.dispatch(errorFBLogin())

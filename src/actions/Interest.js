@@ -19,19 +19,19 @@ export function sendAttendingInterest(sessionKey, dispatch, concertId, performDi
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    console.log(responseData)
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
-  .catch((error) => {
-    console.warn(error)
-  })
-  .done(
-  )
+  .catch((error) => {})
+  .done()
 }
 
 export function sendNotAttendingInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -41,18 +41,19 @@ export function sendNotAttendingInterest(sessionKey, dispatch, concertId, perfor
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
-  .catch((error) => {
-    console.warn(error)
-  })
-  .done(
-  )
+  .catch((error) => {})
+  .done()
 }
 
 export function sendIndividualInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -62,19 +63,19 @@ export function sendIndividualInterest(sessionKey, dispatch, concertId, performD
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    console.log(responseData)
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
-  .catch((error) => {
-    console.warn(error)
-  })
-  .done(
-  )
+  .catch((error) => {})
+  .done()
 }
 
 export function sendNotIndividualInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -84,18 +85,19 @@ export function sendNotIndividualInterest(sessionKey, dispatch, concertId, perfo
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
-  .catch((error) => {
-    console.warn(error)
-  })
-  .done(
-  )
+  .catch((error) => {})
+  .done()
 }
 
 export function sendGroupInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -105,16 +107,18 @@ export function sendGroupInterest(sessionKey, dispatch, concertId, performDispat
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    console.log(responseData)
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
   .catch((error) => {
-    console.warn(error)
   })
   .done(
   )
@@ -127,15 +131,18 @@ export function sendNotGroupInterest(sessionKey, dispatch, concertId, performDis
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
   .catch((error) => {
-    console.warn(error)
   })
   .done(
   )
@@ -148,15 +155,17 @@ export function sendLike(sessionKey, dispatch, concertId, profileId, performDisp
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    console.log(responseData)
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       // .. Perform any dispatchs
     }
   })
   .catch((error) => {
-    console.warn(error)
   })
   .done(
   )
@@ -169,15 +178,17 @@ export function sendNotLike(sessionKey, dispatch, concertId, profileId, performD
       'Authorization': 'Token token=' + sessionKey
     }
   })
-  .then((response) => response.json())
+  .then((response) => {
+    return response.json()
+  })
   .then((responseData) => {
-    console.log(responseData)
-    if (responseData && performDispatch) {
+    if (responseData.error) {
+      // Handle error...
+    } else if (responseData && performDispatch) {
       // .. Perform any dispatchs
     }
   })
   .catch((error) => {
-    console.warn(error)
   })
   .done(
   )

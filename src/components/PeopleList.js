@@ -99,14 +99,17 @@ class PeopleList extends Component {
                                   })
                                 })
                                 .then((response) => {
-                                  console.log(response)
                                   if (response.ok == 200) {
-                                    response.json()
+                                    return response.json()
                                   }
                                 })
                                 .then((responseData) => {
-                                  fetchChatList(sessionToken, store.dispatch)
-                                  Actions.chatList()
+                                  if (responseData.error) {
+                                    // Handle error
+                                  } else {
+                                    fetchChatList(sessionToken, store.dispatch)
+                                    Actions.chatList()
+                                  }
                                 })
                                 .catch((error) => {
                                   console.warn(error)

@@ -68,7 +68,7 @@ class ChatList extends Component {
             let chatName = 'Chat'
             let titleName = 'Chat'
             if (chat.participants && chat.participants.length == 1) {
-              chatName = '+1 ' + chat.participants[0].name
+              chatName = '+1 ' + chat.participants[0].name.split(' ')[0]
               titleName = chatName
             } else if (chat.participants && chat.participants.length > 1) {
               chatName = '+8 ' + concatenateParticipants(chat.participants)
@@ -104,7 +104,9 @@ class ChatList extends Component {
               </TouchableOpacity>
             )
           })}
-          <FBLoginButton/>
+          <View style={styles.loginContainer}>
+            <FBLoginButton/>
+          </View>
         </View>
       </MainLayout>
     )
@@ -177,5 +179,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#737272',
     marginRight: 5,
+  },
+  loginContainer: {
+    marginTop: 600,
+    marginBottom: 20,
+    alignItems: 'center',
   },
 })
