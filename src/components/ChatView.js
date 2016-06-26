@@ -13,6 +13,13 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
+import { setChatState } from '../actions/Chats'
+import {
+  getConcertFromId,
+  weekdayFromDate,
+  getHourMinutesFromDate,
+} from '../Utility'
+
 import MainLayout from './MainLayout'
 
 var GiftedMessenger = require('react-native-gifted-messenger')
@@ -26,18 +33,6 @@ if (Platform.OS === 'android') {
 }
 
 class ChatView extends Component {
-  constructor(props) {
-    super(props)
-    this._isMounted = false
-    this._messages = this.getInitialMessages()
-    this.state = {
-      messages: this._messages,
-      isLoadingEarlierMessages: false,
-      typingMessage: '',
-      allLoaded: false,
-    }
-  }
-
   componentDidMount() {
     this._isMounted = true
 
@@ -169,29 +164,6 @@ class ChatView extends Component {
     // this.setMessageStatus(message.uniqueId, 'ErrorButton');
   }
 
-  onLoadEarlierMessages() {
-    // display a loader until you retrieve the messages from your server
-    this.setState({
-      isLoadingEarlierMessages: true,
-    })
-
-    // Your logic here
-    // Eg: Retrieve old messages from your server
-
-    // IMPORTANT
-    // Oldest messages have to be at the begining of the array
-    var earlierMessages = []
-
-    setTimeout(() => {
-      this.setMessages(earlierMessages.concat(this._messages)) // prepend the earlier messages to your list
-      this.setState({
-        isLoadingEarlierMessages: false, // hide the loader
-        allLoaded: true, // hide the `Load earlier messages` button
-      })
-    }, 1000) // simulating network
-
-  }
-
   handleReceive(message = {}) {
     // make sure that your message contains :
     // text, name, image, position: 'left', date, uniqueId
@@ -212,7 +184,48 @@ class ChatView extends Component {
     // Eg: Navigate to the user profile
   }
 
+  _concatenateParticipants(participants) {
+    let names = []
+    const arrayLength = participants.length
+    for (let i = 0; i < arrayLength; i++) {
+      const participant = participants[i]
+      names.push(participant.name.split(' ')[0])
+    }
+    return names.join(', ')
+  }
+
+  _generateWelcomeMessage(participants, concert) {
+    const names = this._concatenateParticipants(participants)
+    const startDate = new Date(concert.start_time)
+    const day = weekdayFromDate(startDate)
+    const time = getHourMinutesFromDate(startDate)
+    return {
+      text: 'Let ' + names + ' know where to meet you for ' + concert.artist + ' at ' + time + ', ' + day + ' on ' + concert.venue,
+      name: '',
+      image: {uri: null},
+      position: 'center',
+      date: new Date(),
+      uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
+    }
+  }
+
   render() {
+    const { store } = this.context
+    const concert = getConcertFromId(this.props.chat.concert_id, this.props.concerts)
+    let chatState
+    if (this.props.chatState[this.props.chat.id]) {
+      chatState = this.props.chatState[this.props.chat.id]
+    } else {
+      chatState = {
+        messages: [
+          this._generateWelcomeMessage(this.props.chat.participants, concert)
+        ],
+        isLoadingEarlierMessages: false,
+        typingMessage: '',
+        allLoaded: true,
+      }
+      // store.dispatch(setChatState(this.props.chatId, chatState))
+    }
     return (
       <GiftedMessenger
         ref={(c) => this._GiftedMessenger = c}
@@ -235,15 +248,13 @@ class ChatView extends Component {
         }}
 
         autoFocus={false}
-        messages={this.state.messages}
+        messages={chatState.messages}
         handleSend={this.handleSend.bind(this)}
         onErrorButtonPress={this.onErrorButtonPress.bind(this)}
         maxHeight={Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT}
+        loadEarlierMessagesButton={!chatState.allLoaded}
 
-        loadEarlierMessagesButton={!this.state.allLoaded}
-        onLoadEarlierMessages={this.onLoadEarlierMessages.bind(this)}
-
-        senderName='Awesome Developer'
+        senderName={this.props.facebookFirstName}
         senderImage={null}
         onImagePress={this.onImagePress}
         displayNames={true}
@@ -252,10 +263,6 @@ class ChatView extends Component {
         handlePhonePress={this.handlePhonePress}
         handleUrlPress={this.handleUrlPress}
         handleEmailPress={this.handleEmailPress}
-
-        isLoadingEarlierMessages={this.state.isLoadingEarlierMessages}
-
-        typingMessage={this.state.typingMessage}
       />
     )
   }
@@ -268,12 +275,12 @@ class ChatView extends Component {
   // make this compatible with Android
   handlePhonePress(phone) {
     if (Platform.OS !== 'android') {
-      var BUTTONS = [
+      let BUTTONS = [
         'Text message',
         'Call',
         'Cancel',
       ]
-      var CANCEL_INDEX = 2
+      let CANCEL_INDEX = 2
 
       ActionSheetIOS.showActionSheetWithOptions({
         options: BUTTONS,
@@ -297,58 +304,29 @@ class ChatView extends Component {
   }
 }
 
-class ChatViewOld extends Component {
-
-  render() {
-    const { store } = this.context
-    return (
-      <MainLayout>
-        <View>
-          <Text style={styles.welcome}>
-            Chat {this.props.chat.key}
-          </Text>
-          <Text>
-            Participants:{"\n"}
-            {this.props.chat.participants.map(function(participant) {
-              return (
-                <Text key={participant.name}>
-                  {participant.name}{"\n"}
-                </Text>
-              )
-            })}
-          </Text>
-          <Text>
-            Playing on {this.props.chat.concert.day}, {this.props.chat.concert.time} at {this.props.chat.concert.location}!
-          </Text>
-        </View>
-      </MainLayout>
-    )
-  }
-}
-
 ChatView.contextTypes = {
   store: React.PropTypes.object.isRequired
 }
 
 ChatView.propTypes = {
   routes: React.PropTypes.object,
-  chat: React.PropTypes.object.isRequired
+  chat: React.PropTypes.object.isRequired,
+  chatState: React.PropTypes.object.isRequired,
+  concerts: React.PropTypes.array.isRequired,
+  facebookFullName: React.PropTypes.string.isRequired,
+  facebookFirstName: React.PropTypes.string.isRequired,
 }
 
-module.exports = ChatView
+const mapStateToProps = function(state) {
+  return {
+    routes: state.routes,
+    concerts: state.concerts.concerts,
+    chatState: state.chats.chatState,
+    facebookFullName: state.login.facebookFullName,
+    facebookFirstName: state.login.facebookFirstName
+  }
+}
 
-// const mapStateToProps = function(state) {
-//   return {
-//     routes: state.routes
-//   }
-// }
+module.exports = connect(mapStateToProps)(ChatView)
 
-// module.exports = connect(mapStateToProps)(ChatView)
-
-const styles = StyleSheet.create({
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-})
+const styles = StyleSheet.create({})

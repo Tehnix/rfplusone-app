@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
+import { ENDPOINTS } from '../stores/Constants'
 import {
   sendLike,
   sendNotLike,
 } from '../actions/Interest'
 import {
-  fetchConcert
+  fetchConcert,
+  fetchChatList,
 } from '../actions/Refresh'
 
 
@@ -53,7 +56,7 @@ class PeopleList extends Component {
           name = attendee.name.split(' ')[0]
         }
         let likeStatus
-        if (attendee.likes_you && attendee.you_like) {
+        if (interest.individual && attendee.likes_you && attendee.you_like) {
           likeStatus = (
             <View style={styles.likeContainer}>
               <Text style={styles.pressToChat}>
@@ -61,7 +64,7 @@ class PeopleList extends Component {
               </Text>
             </View>
           )
-        } else if (attendee.likes_you) {
+        } else if (interest.individual && attendee.likes_you) {
           likeStatus = (
             <View style={styles.likeContainer}>
               <Text style={styles.waitingForYou}>
@@ -69,7 +72,7 @@ class PeopleList extends Component {
               </Text>
             </View>
           )
-        } else if (attendee.you_like) {
+        } else if (interest.individual && attendee.you_like) {
           likeStatus = (
             <View style={styles.likeContainer}>
               <Text style={styles.youLike}>
@@ -82,12 +85,34 @@ class PeopleList extends Component {
           <TouchableOpacity key={attendee.profile_id}
                             style={styles.personContainer}
                             onPress={() => {
-                              if (attendee.you_like) {
+                              if (attendee.likes_you && attendee.you_like) {
+                                fetch(ENDPOINTS.chats, {
+                                  method: 'POST',
+                                  headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Token token=' + sessionToken
+                                  },
+                                  body: JSON.stringify({
+                                    profile_id: attendee.profile_id,
+                                    concert_id: concertId,
+                                  })
+                                })
+                                .then((response) => response.json())
+                                .then((responseData) => {
+                                  fetchChatList(sessionToken, store.dispatch)
+                                  Actions.chatList()
+                                })
+                                .catch((error) => {
+                                  console.warn(error)
+                                })
+                                .done()
+                              } else if (attendee.you_like) {
                                 sendNotLike(sessionToken, store.dispatch, concertId, attendee.profile_id, false)
-                                fetchConcert(sessionToken, store, concertId)
+                                fetchConcert(sessionToken, store.dispatch, concertId)
                               } else {
                                 sendLike(sessionToken, store.dispatch, concertId, attendee.profile_id, false)
-                                fetchConcert(sessionToken, store, concertId)
+                                fetchConcert(sessionToken, store.dispatch, concertId)
                               }
                             }}>
             <Image style={styles.profilePicture}
@@ -188,7 +213,7 @@ const styles = StyleSheet.create({
     color: '#00cb63',
   },
   youLike: {
-    fontSize: 20,
+    fontSize: 13,
     fontWeight: 'bold',
     color: 'black',
   },

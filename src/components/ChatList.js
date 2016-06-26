@@ -28,7 +28,7 @@ class ChatList extends Component {
     const arrayLength = participants.length
     for (let i = 0; i < arrayLength; i++) {
       const participant = participants[i]
-      names.push(participant.name)
+      names.push(participant.name.split(' ')[0])
     }
     names = names.join(', ')
     if (names.length > 33) {
@@ -39,6 +39,7 @@ class ChatList extends Component {
 
   render() {
     const { store } = this.context
+    const sessionToken = this.props.sessionToken
     const concerts = this.props.concerts
     const concatenateParticipants = this._concatenateParticipants
     return (
@@ -48,10 +49,10 @@ class ChatList extends Component {
             const concert = getConcertFromId(chat.concert_id, concerts)
             let chatName = 'Chat'
             let titleName = 'Chat'
-            if (chat.participants.length == 1) {
+            if (chat.participants && chat.participants.length == 1) {
               chatName = '+1 ' + chat.participants[0].name
               titleName = chatName
-            } else if (chat.participants.length > 1) {
+            } else if (chat.participants && chat.participants.length > 1) {
               chatName = '+8 ' + concatenateParticipants(chat.participants)
               if (chatName.length > 30) {
                 titleName = chatName.substring(0, 30) + '...'
@@ -59,7 +60,7 @@ class ChatList extends Component {
             }
             let chatTitleStyle = styles.chatTitle
             let chatDescriptionStyle = styles.chatDescription
-            if (chat.unreadCount > 0) {
+            if (chat.unread_count > 0) {
               chatTitleStyle = styles.chatTitleUnread
               chatDescriptionStyle = styles.chatDescriptionUnread
             }
@@ -82,18 +83,6 @@ class ChatList extends Component {
               </TouchableOpacity>
             )
           })}
-          <Text onPress={() => this.props.showChatActivity()}>
-            Show chat activity!
-          </Text>
-          <Text onPress={() => this.props.hideChatActivity()}>
-            Hide chat activity!
-          </Text>
-          <Text onPress={() => this.props.setChatUnreadCount(0)}>
-            Set chat unread count to 0
-          </Text>
-          <Text onPress={() => this.props.setChatUnreadCount(15)}>
-            Set chat unread count to 15
-          </Text>
           <FBLoginButton/>
         </View>
       </MainLayout>
@@ -109,6 +98,7 @@ ChatList.propTypes = {
   routes: React.PropTypes.object,
   chats: React.PropTypes.array.isRequired,
   concerts: React.PropTypes.array.isRequired,
+  sessionToken: React.PropTypes.string.isRequired,
 }
 
 const mapStateToProps = function(state) {
@@ -116,21 +106,12 @@ const mapStateToProps = function(state) {
     routes: state.routes,
     chats: state.chats.chats,
     concerts: state.concerts.concerts,
+    sessionToken: state.login.sessionToken,
   }
 }
 
 const mapDispatchToProps = function(dispatch) {
-  return {
-    showChatActivity: () => {
-      dispatch(showChatActivity())
-    },
-    hideChatActivity: () => {
-      dispatch(hideChatActivity())
-    },
-    setChatUnreadCount: (count) => {
-      dispatch(setChatUnreadCount(count))
-    },
-  }
+  return {}
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(ChatList)

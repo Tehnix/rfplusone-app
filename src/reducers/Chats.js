@@ -3,6 +3,7 @@ import {
   SHOW_CHAT_ACTIVITY,
   HIDE_CHAT_ACTIVITY,
   SET_CHAT_UNREAD_COUNT,
+  SET_CHAT_STATE,
   CHAT_TYPES,
   CHAT_ICON_STATE
 } from '../actions/Chats'
@@ -10,7 +11,8 @@ import {
 const initialState = {
   chatIconState: CHAT_ICON_STATE.NOT_SHOWING_CHAT_ACTIVITY,
   totalUnreadCount: 0,
-  chats: []
+  chats: [],
+  chatState: {},
 }
 
 export function chats(state = initialState, action) {
@@ -35,6 +37,14 @@ export function chats(state = initialState, action) {
       ...state,
       chatIconState: action.chatIconState,
       totalUnreadCount: action.totalUnreadCount
+    }
+  case SET_CHAT_STATE:
+    return {
+      ...state,
+      chatState: {
+        ...state.chatState,
+        [action.chatId]: action.state
+      }
     }
   default:
     return state

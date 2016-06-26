@@ -16,6 +16,7 @@ import Button from 'react-native-button'
 
 import { setConcertFilter } from '../actions/Concerts'
 import { ENDPOINTS } from '../stores/Constants'
+import { fetchConcert } from '../actions/Refresh'
 
 import {
   weekdayFromDate,
@@ -28,6 +29,7 @@ import MainLayout from './MainLayout'
 class ConcertList extends Component {
   render() {
     const { store } = this.context
+    const sessionToken = this.props.sessionToken
     const navigatorTopMargin = Navigator.NavigationBar.Styles.General.StatusBarHeight + Navigator.NavigationBar.Styles.General.NavBarHeight
     const {screenHeight, screenWidth} = Dimensions.get('window')
     const pictureHeight = screenWidth * 0.5625
@@ -67,7 +69,10 @@ class ConcertList extends Component {
               return (
                 <TouchableHighlight key={concert.id}
                                     style={styles.concertContainer}
-                                    onPress={() => Actions.concertView({title: concert.artist, concert: concert})}>
+                                    onPress={() => {
+                                      fetchConcert(sessionToken, store.dispatch, concert.id)
+                                      Actions.concertView({title: concert.artist, concert: concert})
+                                  }}>
                   <Image style={styles.concertThumbnail}
                          source={{uri: concert.images[0].url}}>
                  <View style={styles.concertInfoContainer}>
@@ -119,6 +124,7 @@ ConcertList.propTypes = {
   filteredConcerts: React.PropTypes.object.isRequired,
   concertsActiveFilter: React.PropTypes.string.isRequired,
   concertsFilters: React.PropTypes.object.isRequired,
+  sessionToken: React.PropTypes.string.isRequired,
 }
 
 const mapStateToProps = function(state) {
@@ -128,6 +134,7 @@ const mapStateToProps = function(state) {
     filteredConcerts: state.concerts.filteredConcerts,
     concertsActiveFilter: state.concerts.activeFilter,
     concertsFilters: state.concerts.filters,
+    sessionToken: state.login.sessionToken,
   }
 }
 

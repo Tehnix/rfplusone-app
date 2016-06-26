@@ -2,6 +2,10 @@ import { ENDPOINTS } from '../stores/Constants'
 import { updateConcertList } from './Concerts'
 import { updateAttendeesList } from './Attendees'
 import { setConcertInterest } from './Interest'
+import {
+  updateChatList,
+  setChatUnreadCount
+} from './Chats'
 
 export const SET_REFRESHING = 'SET_REFRESHING'
 
@@ -26,23 +30,24 @@ export function stopRefreshing() {
   }
 }
 
-export function refreshContent(sessionKey, store, sceneKey, routes) {
+export function refreshContent(sessionKey, dispatch, sceneKey, routes) {
   if (sceneKey == 'concertList') {
-    store.dispatch(startRefreshing())
-    fetchConcertList(sessionKey, store)
+    dispatch(startRefreshing())
+    fetchConcertList(sessionKey, dispatch)
   } else if (sceneKey == 'concertView') {
     const concertId = routes.scene.concert.id
-    store.dispatch(startRefreshing())
-    fetchConcert(sessionKey, store, concertId)
+    dispatch(startRefreshing())
+    fetchConcert(sessionKey, dispatch, concertId)
   } else if (sceneKey == 'chatList') {
-    console.log('Refreshing chat list')
+    dispatch(startRefreshing())
+    fetchChatList(sessionKey, dispatch)
   } else if (sceneKey == 'chatView') {
     const concertKey = routes.scene.chat.key
     console.log('Refreshing chat view with key = ' + concertKey.toString())
   }
 }
 
-export function fetchConcertList(sessionKey, store) {
+export function fetchConcertList(sessionKey, dispatch) {
   fetch(ENDPOINTS.concerts, {
     method: 'GET',
     headers: {
@@ -52,18 +57,18 @@ export function fetchConcertList(sessionKey, store) {
   .then((response) => response.json())
   .then((responseData) => {
     if (responseData.length > 0) {
-      store.dispatch(updateConcertList(responseData))
+      dispatch(updateConcertList(responseData))
     }
   })
   .catch((error) => {
     console.warn(error)
   })
   .done(
-    store.dispatch(stopRefreshing())
+    dispatch(stopRefreshing())
   )
 }
 
-export function fetchConcert(sessionKey, store, concertId) {
+export function fetchConcert(sessionKey, dispatch, concertId) {
   fetch(ENDPOINTS.concert(concertId), {
     method: 'GET',
     headers: {
@@ -73,14 +78,49 @@ export function fetchConcert(sessionKey, store, concertId) {
   .then((response) => response.json())
   .then((responseData) => {
     if (responseData) {
-      store.dispatch(updateAttendeesList(concertId, responseData.attendees))
-      store.dispatch(setConcertInterest(concertId, responseData.interest))
+      dispatch(updateAttendeesList(concertId, responseData.attendees))
+      dispatch(setConcertInterest(concertId, responseData.interest))
     }
   })
   .catch((error) => {
     console.warn(error)
   })
   .done(
-    store.dispatch(stopRefreshing())
+    dispatch(stopRefreshing())
+  )
+}
+
+export function fetchChatList(sessionKey, dispatch) {
+  fetch(ENDPOINTS.chats, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Token token=' + sessionKey
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    if (responseData) {
+      console.log(responseData)
+      // Count the unread messages
+      let unreadCount = 0
+      if (responseData.length) {
+        const arrayLength = responseData.length
+        for (let i = 0; i < arrayLength; i++) {
+          const chat = responseData[i]
+          console.log(chat)
+          if (chat.unread_count && chat.unread_count !== null) {
+            unreadCount += chat.unread_count
+          }
+        }
+      }
+      dispatch(updateChatList(responseData))
+      dispatch(setChatUnreadCount(unreadCount))
+    }
+  })
+  .catch((error) => {
+    console.warn(error)
+  })
+  .done(
+    dispatch(stopRefreshing())
   )
 }

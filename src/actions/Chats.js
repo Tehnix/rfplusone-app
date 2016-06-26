@@ -2,6 +2,7 @@ export const UPDATE_CHAT_LIST = 'UPDATE_CHAT_LIST'
 export const SHOW_CHAT_ACTIVITY = 'SHOW_CHAT_ACTIVITY'
 export const HIDE_CHAT_ACTIVITY = 'HIDE_CHAT_ACTIVITY'
 export const SET_CHAT_UNREAD_COUNT = 'SET_CHAT_UNREAD_COUNT'
+export const SET_CHAT_STATE = 'SET_CHAT_STATE'
 
 export const CHAT_TYPES = {
   SINGLE_CHAT: 'SINGLE_CHAT',
@@ -45,5 +46,13 @@ export function setChatUnreadCount(count) {
     type: SET_CHAT_UNREAD_COUNT,
     chatIconState: newChatIconState,
     totalUnreadCount: count
+  }
+}
+
+export function setChatState(chatId, state) {
+  return {
+    type: SET_CHAT_STATE,
+    chatId: chatId,
+    chatState: state
   }
 }

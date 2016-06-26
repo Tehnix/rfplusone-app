@@ -29,7 +29,7 @@ class MainLayout extends Component {
   _onRefresh(store) {
     refreshContent(
       this.props.sessionToken,
-      store,
+      store.dispatch,
       this.props.routes.scene.sceneKey,
       this.props.routes
     )
@@ -76,7 +76,7 @@ class MainLayout extends Component {
     if (nextProps.updatingConcerts == false && !nextProps.concerts.length &&
         nextProps.loginState == FB_LOGIN_STATE.LOGGED_IN) {
       store.dispatch(updatingConcertList())
-      fetchConcertList(nextProps.sessionToken, store)
+      fetchConcertList(nextProps.sessionToken, store.dispatch)
     }
   }
 
