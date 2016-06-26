@@ -139,7 +139,8 @@ module.exports = connect()(FBLoginButton)
 
 const styles = StyleSheet.create({
   loginButton: {
-    height: 55,
-    width: 220
+    height: 30,
+    width: 200,
+    transform: [{scale: 1.6}]
   },
 })
