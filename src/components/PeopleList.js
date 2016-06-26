@@ -18,6 +18,12 @@ import {
   fetchChatList,
 } from '../actions/Refresh'
 
+const FBSDK = require('react-native-fbsdk')
+const {
+  AppEventsLogger,
+} = FBSDK
+// Usage: AppEventsLogger.logEvent('Event')
+
 
 class PeopleList extends Component {
   _filterAttendees(interest, attendees) {
@@ -99,9 +105,7 @@ class PeopleList extends Component {
                                   })
                                 })
                                 .then((response) => {
-                                  if (response.ok == 200) {
-                                    return response.json()
-                                  }
+                                  return response.json()
                                 })
                                 .then((responseData) => {
                                   if (responseData.error) {
@@ -141,9 +145,20 @@ class PeopleList extends Component {
       })
     } else {
       attendeeComponents = (
-        <Text>
-          Looking for an awesome group!
-        </Text>
+        <View>
+          <View style={styles.lookingForGroupHeaderContainer}>
+            <Text style={styles.lookingForGroupHeader}>
+              Coming soon!
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => {
+            AppEventsLogger.logEvent('Wanted Groups')
+          }}>
+            <Text style={styles.lookingForGroup}>
+              Let us know if you would want this feature, by pressing on this text!
+            </Text>
+          </TouchableOpacity>
+        </View>
       )
     }
     return (
@@ -209,6 +224,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
     marginRight: 5,
+  },
+  lookingForGroupHeaderContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  lookingForGroupHeader: {
+    fontSize: 25,
+  },
+  lookingForGroup: {
+    marginLeft: 5,
+    marginTop: 5,
   },
   waitingForYou: {
     fontSize: 13,

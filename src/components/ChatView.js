@@ -26,6 +26,12 @@ import {
 
 import MainLayout from './MainLayout'
 
+const FBSDK = require('react-native-fbsdk')
+const {
+  AppEventsLogger,
+} = FBSDK
+// Usage: AppEventsLogger.logEvent('Event')
+
 var GiftedMessenger = require('react-native-gifted-messenger')
 var Communications = require('react-native-communications')
 
@@ -45,7 +51,7 @@ class ChatView extends Component {
     this._isMounted = false
   }
 
-  handleSend(message = {}) {
+  handleSend(concert, message = {}) {
     const { store } = this.context
     const uniqueId = Math.round(Math.random() * 10000)
     message.uniqueId = uniqueId
@@ -63,11 +69,12 @@ class ChatView extends Component {
       })
     })
     .then((response) => {
-  return response.json()
-})
+      return response.json()
+    })
     .then((responseData) => {})
     .catch((error) => {})
     .done()
+    AppEventsLogger.logEvent('Sent Message', {'Concert': concert.artist})
     store.dispatch(newChatMessage(this.props.chat.id, message))
   }
 
@@ -146,7 +153,7 @@ class ChatView extends Component {
 
         autoFocus={false}
         messages={messages}
-        handleSend={this.handleSend.bind(this)}
+        handleSend={this.handleSend.bind(this, concert)}
         onErrorButtonPress={this.onErrorButtonPress.bind(this)}
         maxHeight={Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT}
         loadEarlierMessagesButton={!chatState.allLoaded}

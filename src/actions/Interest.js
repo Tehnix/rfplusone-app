@@ -2,6 +2,12 @@ import { ENDPOINTS } from '../stores/Constants'
 import { updateConcertList } from './Concerts'
 import { updateAttendeesList } from './Attendees'
 
+const FBSDK = require('react-native-fbsdk')
+const {
+  AppEventsLogger,
+} = FBSDK
+// Usage: AppEventsLogger.logEvent('Event')
+
 export const SET_CONCERT_INTEREST = 'SET_CONCERT_INTEREST'
 
 export function setConcertInterest(concertId, interest) {
@@ -31,7 +37,9 @@ export function sendAttendingInterest(sessionKey, dispatch, concertId, performDi
     }
   })
   .catch((error) => {})
-  .done()
+  .done(() => {
+    AppEventsLogger.logEvent('Attending Concert', {'Concert ID': concertId})
+  })
 }
 
 export function sendNotAttendingInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -53,7 +61,9 @@ export function sendNotAttendingInterest(sessionKey, dispatch, concertId, perfor
     }
   })
   .catch((error) => {})
-  .done()
+  .done(() => {
+    AppEventsLogger.logEvent('Unattending Concert', {'Concert ID': concertId})
+  })
 }
 
 export function sendIndividualInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -75,7 +85,9 @@ export function sendIndividualInterest(sessionKey, dispatch, concertId, performD
     }
   })
   .catch((error) => {})
-  .done()
+  .done(() => {
+    AppEventsLogger.logEvent('Individual Interest on Concert', {'Concert ID': concertId})
+  })
 }
 
 export function sendNotIndividualInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -120,8 +132,9 @@ export function sendGroupInterest(sessionKey, dispatch, concertId, performDispat
   })
   .catch((error) => {
   })
-  .done(
-  )
+  .done(() => {
+    AppEventsLogger.logEvent('Group Interest on Concert', {'Concert ID': concertId})
+  })
 }
 
 export function sendNotGroupInterest(sessionKey, dispatch, concertId, performDispatch) {
@@ -167,8 +180,9 @@ export function sendLike(sessionKey, dispatch, concertId, profileId, performDisp
   })
   .catch((error) => {
   })
-  .done(
-  )
+  .done(() => {
+    AppEventsLogger.logEvent('Liked Person', {'Concert ID': concertId, 'Profile ID': profileId})
+  })
 }
 
 export function sendNotLike(sessionKey, dispatch, concertId, profileId, performDispatch) {
@@ -190,6 +204,7 @@ export function sendNotLike(sessionKey, dispatch, concertId, profileId, performD
   })
   .catch((error) => {
   })
-  .done(
-  )
+  .done(() => {
+    AppEventsLogger.logEvent('Unliked Person', {'Concert ID': concertId, 'Profile ID': profileId})
+  })
 }
