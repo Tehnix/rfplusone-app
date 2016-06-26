@@ -15,6 +15,9 @@ export const ENDPOINTS = {
   group: (concertId) => {
     return hostname + '/concerts/' + concertId.toString() + '/look_for_group'
   },
+  like: (concertId, profileId) => {
+    return hostname + '/concerts/' + concertId.toString() + '/like/' + profileId.toString()
+  },
   chats: hostname + '/chats',
   chat: (chatId) => {
     return hostname + '/chats/' + chatId.toString()

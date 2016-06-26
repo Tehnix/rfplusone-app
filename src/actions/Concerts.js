@@ -1,5 +1,12 @@
 export const UPDATED_CONCERT_LIST = 'UPDATED_CONCERT_LIST'
 export const SET_CONCERT_FILTER = 'SET_CONCERT_FILTER'
+export const UPDATING_CONCERT_LIST = 'UPDATING_CONCERT_LIST'
+
+export function updatingConcertList() {
+  return {
+    type: UPDATING_CONCERT_LIST
+  }
+}
 
 export function updateConcertList(concerts) {
   return {

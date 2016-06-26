@@ -15,13 +15,15 @@ import { Actions } from 'react-native-router-flux'
 
 import { REHYDRATION_STATE } from '../actions/Persist'
 import { FB_LOGIN_STATE } from '../actions/FBLogin'
+import { CHAT_ICON_STATE } from '../actions/Chats'
 import {
   REFRESH_STATE,
   startRefreshing,
   stopRefreshing,
-  refreshContent
+  refreshContent,
+  fetchConcertList,
 } from '../actions/Refresh'
-import { CHAT_ICON_STATE } from '../actions/Chats'
+import { updatingConcertList } from '../actions/Concerts'
 
 class MainLayout extends Component {
   _onRefresh(store) {
@@ -70,6 +72,12 @@ class MainLayout extends Component {
         nextProps.chatIconState != this.props.chatIconState) {
       this._setChatActivityIcon(nextProps, this.props)
     }
+    // Check if we need to load concerts
+    if (nextProps.updatingConcerts == false && !nextProps.concerts.length &&
+        nextProps.loginState == FB_LOGIN_STATE.LOGGED_IN) {
+      store.dispatch(updatingConcertList())
+      fetchConcertList(nextProps.sessionToken, store)
+    }
   }
 
   render() {
@@ -114,7 +122,9 @@ MainLayout.propTypes = {
   chatIconState: React.PropTypes.string.isRequired,
   loginState: React.PropTypes.string.isRequired,
   refreshing: React.PropTypes.string.isRequired,
-  refreshBool: React.PropTypes.bool.isRequired
+  refreshBool: React.PropTypes.bool.isRequired,
+  concerts: React.PropTypes.array.isRequired,
+  updatingConcerts: React.PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = function(state) {
@@ -127,6 +137,8 @@ const mapStateToProps = function(state) {
     loginState: state.login.loginState,
     refreshing: state.refresh.refreshing,
     refreshBool: state.refresh.refreshBool,
+    concerts: state.concerts.concerts,
+    updatingConcerts: state.concerts.updatingConcerts,
   }
 }
 

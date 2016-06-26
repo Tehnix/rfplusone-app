@@ -9,32 +9,8 @@ import {
 
 const initialState = {
   chatIconState: CHAT_ICON_STATE.NOT_SHOWING_CHAT_ACTIVITY,
-  totalUnreadCount: 18,
-  chats: [
-    {
-      id: 1,
-      participants: [
-        {profilePicture: '...', name: 'Emilia'}
-      ],
-      concert_id: 68,
-      unreadCount: 3
-    },
-    {
-      id: 2,
-      participants: [
-        {profilePicture: '...', name: 'Emilia'},
-        {profilePicture: '...', name: 'Mick'},
-        {profilePicture: '...', name: 'Mille'},
-        {profilePicture: '...', name: 'Line'},
-        {profilePicture: '...', name: 'Thomas'},
-        {profilePicture: '...', name: 'Martin'},
-        {profilePicture: '...', name: 'Christian'},
-        {profilePicture: '...', name: 'Maiken'}
-      ],
-      concert_id: 58,
-      unreadCount: 0,
-    },
-  ]
+  totalUnreadCount: 0,
+  chats: []
 }
 
 export function chats(state = initialState, action) {

@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
 import Button from 'react-native-button'
@@ -82,7 +83,14 @@ class ConcertActions extends Component {
       return (
         <View style={styles.container}>
           <View style={styles.selected}>
-            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToNone)}
+            <Button onPress={() => Alert.alert(
+              'Unattending',
+              'Are you sure you want to unattend?',
+              [
+                {text: 'Cancel'},
+                {text: 'Yes', onPress: () => this.props.setConcertInterest(sessionToken, this.props.concertId, setToNone)},
+              ]
+            )}
                     containerStyle={{flex: 1}}
                     style={styles.attending}>
               {attendingText}
@@ -165,17 +173,17 @@ const mapDispatchToProps = function(dispatch) {
   return {
     setConcertInterest: (sessionKey, concertId, interest) => {
       if (interest.attending) {
-        sendAttendingInterest(sessionKey, dispatch, concertId, false)
         sendNotIndividualInterest(sessionKey, dispatch, concertId, false)
-        sendNotGroupInterest(sessionKey, dispatch, concertId, true)
+        sendNotGroupInterest(sessionKey, dispatch, concertId, false)
+        sendAttendingInterest(sessionKey, dispatch, concertId, false)
       } else if (interest.individual) {
+        sendNotGroupInterest(sessionKey, dispatch, concertId, false)
         sendIndividualInterest(sessionKey, dispatch, concertId, false)
-        sendNotGroupInterest(sessionKey, dispatch, concertId, true)
       } else if (interest.group) {
+        sendNotIndividualInterest(sessionKey, dispatch, concertId, false)
         sendGroupInterest(sessionKey, dispatch, concertId, false)
-        sendNotIndividualInterest(sessionKey, dispatch, concertId, true)
       } else {
-        sendNotAttendingInterest(sessionKey, dispatch, concertId, true)
+        sendNotAttendingInterest(sessionKey, dispatch, concertId, false)
       }
       dispatch(setConcertInterest(concertId, interest))
     },

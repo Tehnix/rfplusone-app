@@ -43,7 +43,6 @@ export function sendNotAttendingInterest(sessionKey, dispatch, concertId, perfor
   })
   .then((response) => response.json())
   .then((responseData) => {
-    console.log(responseData)
     if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
@@ -87,7 +86,6 @@ export function sendNotIndividualInterest(sessionKey, dispatch, concertId, perfo
   })
   .then((response) => response.json())
   .then((responseData) => {
-    console.log(responseData)
     if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
@@ -131,10 +129,51 @@ export function sendNotGroupInterest(sessionKey, dispatch, concertId, performDis
   })
   .then((response) => response.json())
   .then((responseData) => {
-    console.log(responseData)
     if (responseData && performDispatch) {
       dispatch(updateAttendeesList(concertId, responseData.attendees))
       dispatch(setConcertInterest(concertId, responseData.interest))
+    }
+  })
+  .catch((error) => {
+    console.warn(error)
+  })
+  .done(
+  )
+}
+
+export function sendLike(sessionKey, dispatch, concertId, profileId, performDispatch) {
+  fetch(ENDPOINTS.like(concertId, profileId), {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Token token=' + sessionKey
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    console.log(responseData)
+    if (responseData && performDispatch) {
+      // .. Perform any dispatchs
+    }
+  })
+  .catch((error) => {
+    console.warn(error)
+  })
+  .done(
+  )
+}
+
+export function sendNotLike(sessionKey, dispatch, concertId, profileId, performDispatch) {
+  fetch(ENDPOINTS.like(concertId, profileId), {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Token token=' + sessionKey
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    console.log(responseData)
+    if (responseData && performDispatch) {
+      // .. Perform any dispatchs
     }
   })
   .catch((error) => {

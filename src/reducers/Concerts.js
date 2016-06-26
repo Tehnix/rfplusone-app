@@ -1,6 +1,7 @@
 import {REHYDRATE} from 'redux-persist/constants'
 import {
   UPDATED_CONCERT_LIST,
+  UPDATING_CONCERT_LIST,
   SET_CONCERT_STATUS,
   SET_CONCERT_FILTER
 } from '../actions/Concerts'
@@ -65,6 +66,7 @@ const filters = {
 const activeFilter = setActiveFilter(filters, '2016-06-26')
 
 const initialState = {
+  updatingConcerts: false,
   activeFilter: activeFilter,
   filters: filters,
   filteredConcerts: filterConcerts(activeFilter, concertsInitialData),
@@ -73,9 +75,15 @@ const initialState = {
 
 export function concerts(state = initialState, action) {
   switch (action.type) {
+  case UPDATING_CONCERT_LIST:
+    return {
+      ...state,
+      updatingConcerts: true
+    }
   case UPDATED_CONCERT_LIST:
     return {
       ...state,
+      updatingConcerts: false,
       filteredConcerts: filterConcerts(state.activeFilter, action.concerts),
       concerts: action.concerts
     }

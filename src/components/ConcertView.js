@@ -48,13 +48,12 @@ class ConcertView extends Component {
            </View>
           </Image>
           <ConcertActions concertId={this.props.concert.id}/>
+          <PeopleList concertId={this.props.concert.id}/>
         </View>
       </MainLayout>
     )
   }
 }
-// <ConcertActions concertKey={this.props.concert}/>
-// <PeopleList concertKey={this.props.concert}/>
 
 ConcertView.contextTypes = {
   store: React.PropTypes.object.isRequired
