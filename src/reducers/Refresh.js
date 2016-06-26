@@ -11,10 +11,11 @@ const initialState = {
 export function refresh(state = initialState, action) {
   switch (action.type) {
   case SET_REFRESHING:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       refreshing: action.refreshing,
       refreshBool: action.refreshBool
-    })
+    }
   default:
     return state
   }

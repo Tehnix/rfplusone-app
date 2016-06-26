@@ -8,9 +8,10 @@ const initialState = {
 export function persist(state = initialState, action) {
   switch (action.type) {
   case REHYDRATE:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       rehydration: REHYDRATION_STATE.FINSIHED_REHYDRATING
-    })
+    }
   default:
     return state
   }

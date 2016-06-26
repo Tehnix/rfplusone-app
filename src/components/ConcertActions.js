@@ -7,32 +7,46 @@ import {
 import { connect } from 'react-redux'
 import Button from 'react-native-button'
 
-import { setConcertStatus } from '../actions/Concerts'
+import {
+  setConcertInterest,
+  sendAttendingInterest,
+  sendNotAttendingInterest,
+  sendIndividualInterest,
+  sendNotIndividualInterest,
+  sendGroupInterest,
+  sendNotGroupInterest,
+} from '../actions/Interest'
 
 class ConcertActions extends Component {
 
-  _buttonDisplay(filter) {
+  _buttonDisplay(sessionToken, interest) {
     const attendingText = 'Attending'
     const plusOneText = '+1'
+    const activePlusOneText = 'Find yourself a +1'
     const groupText = '+8'
+    const activeGroupText = 'Get ready!'
+    const setToIndividual = {attending: false, individual: true, group: false}
+    const setToGroup = {attending: false, individual: false, group: true}
+    const setToAttending = {attending: true, individual: false, group: false}
+    const setToNone = {attending: false, individual: false, group: false}
     let buttons
-    if (filter == 'plusOne') {
+    if (interest.individual) {
       return (
         <View style={styles.container}>
           <View style={styles.selected}>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToIndividual)}
                     containerStyle={{flex: 1}}
                     style={styles.plusOne}>
-              {plusOneText}
+              {activePlusOneText}
             </Button>
           </View>
           <View style={styles.notSelected}>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToAttending)}
                     containerStyle={{flex: 0.5}}
                     style={styles.attending}>
               {attendingText}
             </Button>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToGroup)}
                     containerStyle={{flex: 0.5}}
                     style={styles.group}>
               {groupText}
@@ -40,26 +54,50 @@ class ConcertActions extends Component {
           </View>
         </View>
       )
-    } else if (filter == 'group') {
+    } else if (interest.group) {
       return (
         <View style={styles.container}>
           <View style={styles.selected}>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToGroup)}
                     containerStyle={{flex: 1}}
                     style={styles.group}>
-              {groupText}
+              {activeGroupText}
             </Button>
           </View>
           <View style={styles.notSelected}>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToIndividual)}
                     containerStyle={{flex: 0.5}}
                     style={styles.plusOne}>
               {plusOneText}
             </Button>
-            <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToAttending)}
                     containerStyle={{flex: 0.5}}
                     style={styles.attending}>
               {attendingText}
+            </Button>
+          </View>
+        </View>
+      )
+    } else if (interest.attending) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.selected}>
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToNone)}
+                    containerStyle={{flex: 1}}
+                    style={styles.attending}>
+              {attendingText}
+            </Button>
+          </View>
+          <View style={styles.notSelected}>
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToIndividual)}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.plusOne}>
+              {plusOneText}
+            </Button>
+            <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToGroup)}
+                    containerStyle={{flex: 0.5}}
+                    style={styles.group}>
+              {groupText}
             </Button>
           </View>
         </View>
@@ -68,19 +106,19 @@ class ConcertActions extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.selected}>
-          <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'attending')}
+          <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToAttending)}
                   containerStyle={{flex: 1}}
                   style={styles.attending}>
-            {attendingText}
+            Set Yourself as {attendingText}
           </Button>
         </View>
         <View style={styles.notSelected}>
-          <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'plusOne')}
+          <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToIndividual)}
                   containerStyle={{flex: 0.5}}
                   style={styles.plusOne}>
             {plusOneText}
           </Button>
-          <Button onPress={() => this.props.setConcertStatus(this.props.concertKey, 'group')}
+          <Button onPress={() => this.props.setConcertInterest(sessionToken, this.props.concertId, setToGroup)}
                   containerStyle={{flex: 0.5}}
                   style={styles.group}>
             {groupText}
@@ -92,10 +130,13 @@ class ConcertActions extends Component {
 
   render() {
     const { store } = this.context
-    const filter = this.props.concerts[this.props.concertKey].status
+    let interest = this.props.interest[this.props.concertId]
+    if (interest == undefined) {
+      interest = {attending: false, individual: false, group: false}
+    }
     return (
       <View>
-        {this._buttonDisplay(filter)}
+        {this._buttonDisplay(this.props.sessionToken, interest)}
       </View>
     )
   }
@@ -107,22 +148,37 @@ ConcertActions.contextTypes = {
 
 ConcertActions.propTypes = {
   routes: React.PropTypes.object,
-  concertKey: React.PropTypes.number.isRequired,
-  concerts: React.PropTypes.object.isRequired,
+  sessionToken: React.PropTypes.string.isRequired,
+  concertId: React.PropTypes.number.isRequired,
+  interest: React.PropTypes.object.isRequired,
 }
 
 const mapStateToProps = function(state) {
   return {
     routes: state.routes,
-    concerts: state.concerts.concerts,
+    sessionToken: state.login.sessionToken,
+    interest: state.interest.interest,
   }
 }
 
 const mapDispatchToProps = function(dispatch) {
   return {
-    setConcertStatus: (concertKey, status) => {
-      dispatch(setConcertStatus(concertKey, status))
-    }
+    setConcertInterest: (sessionKey, concertId, interest) => {
+      if (interest.attending) {
+        sendAttendingInterest(sessionKey, dispatch, concertId, false)
+        sendNotIndividualInterest(sessionKey, dispatch, concertId, false)
+        sendNotGroupInterest(sessionKey, dispatch, concertId, true)
+      } else if (interest.individual) {
+        sendIndividualInterest(sessionKey, dispatch, concertId, false)
+        sendNotGroupInterest(sessionKey, dispatch, concertId, true)
+      } else if (interest.group) {
+        sendGroupInterest(sessionKey, dispatch, concertId, false)
+        sendNotIndividualInterest(sessionKey, dispatch, concertId, true)
+      } else {
+        sendNotAttendingInterest(sessionKey, dispatch, concertId, true)
+      }
+      dispatch(setConcertInterest(concertId, interest))
+    },
   }
 }
 
@@ -139,25 +195,25 @@ const styles = StyleSheet.create({
   attending: {
     backgroundColor: '#FAAC3D',
     color: 'white',
-    fontSize: 18,
+    fontSize: 23,
     textAlign: 'center',
-    paddingTop: 13,
-    paddingBottom: 13,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   plusOne: {
-    backgroundColor: '#00C15E',
+    backgroundColor: '#ff912f',
     color: 'white',
-    fontSize: 18,
+    fontSize: 23,
     textAlign: 'center',
-    paddingTop: 13,
-    paddingBottom: 13,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   group: {
-    backgroundColor: '#1C77BA',
+    backgroundColor: '#ffc08b',
     color: 'white',
-    fontSize: 18,
+    fontSize: 23,
     textAlign: 'center',
-    paddingTop: 13,
-    paddingBottom: 13,
+    paddingTop: 10,
+    paddingBottom: 10,
   }
 })

@@ -1,3 +1,8 @@
+import { ENDPOINTS } from '../stores/Constants'
+import { updateConcertList } from './Concerts'
+import { updateAttendeesList } from './Attendees'
+import { setConcertInterest } from './Interest'
+
 export const SET_REFRESHING = 'SET_REFRESHING'
 
 export const REFRESH_STATE = {
@@ -21,16 +26,61 @@ export function stopRefreshing() {
   }
 }
 
-export function refreshContent(store, sceneKey, routes) {
+export function refreshContent(sessionKey, store, sceneKey, routes) {
   if (sceneKey == 'concertList') {
-    console.log('Refreshing concert list')
+    store.dispatch(startRefreshing())
+    fetchConcertList(sessionKey, store)
   } else if (sceneKey == 'concertView') {
-    const concertKey = routes.scene.concert.key
-    console.log('Refreshing concert view with key = ' + concertKey.toString())
+    const concertId = routes.scene.concert.id
+    store.dispatch(startRefreshing())
+    fetchConcert(sessionKey, store, concertId)
   } else if (sceneKey == 'chatList') {
     console.log('Refreshing chat list')
   } else if (sceneKey == 'chatView') {
     const concertKey = routes.scene.chat.key
     console.log('Refreshing chat view with key = ' + concertKey.toString())
   }
+}
+
+export function fetchConcertList(sessionKey, store) {
+  fetch(ENDPOINTS.concerts, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Token token=' + sessionKey
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    if (responseData.length > 0) {
+      store.dispatch(updateConcertList(responseData))
+    }
+  })
+  .catch((error) => {
+    console.warn(error)
+  })
+  .done(
+    store.dispatch(stopRefreshing())
+  )
+}
+
+export function fetchConcert(sessionKey, store, concertId) {
+  fetch(ENDPOINTS.concert(concertId), {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Token token=' + sessionKey
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    if (responseData) {
+      store.dispatch(updateAttendeesList(concertId, responseData.attendees))
+      store.dispatch(setConcertInterest(concertId, responseData.interest))
+    }
+  })
+  .catch((error) => {
+    console.warn(error)
+  })
+  .done(
+    store.dispatch(stopRefreshing())
+  )
 }

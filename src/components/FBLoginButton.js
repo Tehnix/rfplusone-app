@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux'
 
 import { ENDPOINTS } from '../stores/Constants'
 import {
+  fbLoginInProgress,
   successfulFBLogin,
   unsuccessfulFBLogin,
   cancelledFBLogin,
@@ -55,14 +56,28 @@ class FBLoginButton extends Component {
   }
 
   // Exchange the facebook access token with a session token
-  _exchangeTokenToSession(store, Actions, accessToken) {
-    fetch(ENDPOINTS.exchangeTokenToSession)
+  _exchangeTokenToSession(store, Actions, accessToken, userId) {
+    fetch(ENDPOINTS.exchangeTokenToSession, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        auth: {
+          id: userId,
+          access_token: accessToken,
+        }
+      })
+    })
     .then((response) => response.json())
     .then((responseData) => {
-      if (responseData.sessionToken) {
+      if (responseData.error) {
+        store.dispatch(errorFBLogin())
+      } else if (responseData.user) {
         store.dispatch(successfulFBLogin(
-          accessToken,
-          responseData.sessionToken
+          responseData.user.access_token,
+          responseData.user.session_token
         ))
         Actions.pop()
       }
@@ -82,13 +97,15 @@ class FBLoginButton extends Component {
     } else {
       AccessToken.getCurrentAccessToken().then(
         (data) => {
+          store.dispatch(fbLoginInProgress())
           // Fetch the users facebook name
           this._fetchFBProfile(store)
           // Exchange the Facebook access token for a session token
           this._exchangeTokenToSession(
             store,
             Actions,
-            data.accessToken.toString()
+            data.accessToken.toString(),
+            data.userID
           )
         }
       )

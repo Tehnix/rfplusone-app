@@ -8,6 +8,7 @@ import {
   Button,
   ScrollView,
   RefreshControl,
+  Navigator,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -24,7 +25,12 @@ import { CHAT_ICON_STATE } from '../actions/Chats'
 
 class MainLayout extends Component {
   _onRefresh(store) {
-    refreshContent(store, this.props.routes.scene.sceneKey, this.props.routes)
+    refreshContent(
+      this.props.sessionToken,
+      store,
+      this.props.routes.scene.sceneKey,
+      this.props.routes
+    )
   }
 
   _setChatActivityIcon(nextProps, props) {
@@ -68,10 +74,15 @@ class MainLayout extends Component {
 
   render() {
     const { store } = this.context
+    let topMargin = Navigator.NavigationBar.Styles.General.StatusBarHeight + Navigator.NavigationBar.Styles.General.NavBarHeight
+    if (this.props.withoutTopMargin) {
+      topMargin = 0
+    }
     return (
       <ScrollView ref='scrollView'
                   keyboardDismissMode='interactive'
-                  style={styles.mainContainer}
+                  style={{flex: 1, backgroundColor: 'white', marginTop: topMargin}}
+                  showsVerticalScrollIndicator={false}
                   refreshControl={
                     <RefreshControl
                       refreshing={this.props.refreshBool}
@@ -95,7 +106,9 @@ MainLayout.contextTypes = {
 
 MainLayout.propTypes = {
   children: React.PropTypes.element.isRequired,
+  withoutTopMargin: React.PropTypes.bool,
   routes: React.PropTypes.object,
+  sessionToken: React.PropTypes.string.isRequired,
   rehydrationState: React.PropTypes.string.isRequired,
   chatUnreadCounter: React.PropTypes.number.isRequired,
   chatIconState: React.PropTypes.string.isRequired,
@@ -107,6 +120,7 @@ MainLayout.propTypes = {
 const mapStateToProps = function(state) {
   return {
     routes: state.routes,
+    sessionToken: state.login.sessionToken,
     rehydrationState: state.persist.rehydration,
     chatUnreadCounter: state.chats.totalUnreadCount,
     chatIconState: state.chats.chatIconState,
@@ -117,11 +131,3 @@ const mapStateToProps = function(state) {
 }
 
 module.exports = connect(mapStateToProps)(MainLayout)
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    marginTop: 64,
-    overflow: 'visible',
-  },
-})

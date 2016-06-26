@@ -12,12 +12,16 @@ class PeopleList extends Component {
   render() {
     const { store } = this.context
     const filter = this.props.concerts[this.props.concertKey].status
+    let containerStyle
     let peopleList
     if (filter == 'group') {
-
+      containerStyle = styles.orangeContainer
+      // ...
     } else if (filter == 'plusOne') {
+      containerStyle = styles.orangeContainer
       peopleList = this.props.people[this.props.concertKey].plusOne
     } else {
+      containerStyle = styles.orangeContainer
       peopleList = this.props.people[this.props.concertKey].friends
     }
     let peopleComponents
@@ -26,7 +30,7 @@ class PeopleList extends Component {
         return (
           <View key={person.key} style={styles.personContainer}>
             <Image style={styles.profilePicture}
-                   source={require('../../graphics/profileFiller.png')}/>
+                   source={{uri: person.picture.profile}}/>
             <Text style={styles.person}>
               {person.name}
             </Text>
@@ -41,7 +45,7 @@ class PeopleList extends Component {
       )
     }
     return (
-      <View style={styles.container}>
+      <View style={containerStyle}>
         {peopleComponents}
       </View>
     )
@@ -73,6 +77,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
   },
+  orangeContainer: {
+    backgroundColor: '#feebda',
+  },
   personContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -91,6 +98,6 @@ const styles = StyleSheet.create({
   profilePicture: {
     width: 40,
     height: 40,
-    marginRight: 5,
+    marginRight: 10,
   }
 })

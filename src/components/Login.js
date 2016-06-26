@@ -17,10 +17,18 @@ class Login extends Component {
   render() {
     const { store } = this.context
     let failedLoginNotification
+    let inProgressNotification
     if (this.props.loginState == FB_LOGIN_STATE.LOGIN_ERROR) {
       failedLoginNotification = (
         <Text style={styles.failedLogin}>
           Seems the login failed on our end :( Try and log out from facebook and back in again
+        </Text>
+      )
+    }
+    if (this.props.loginState == FB_LOGIN_STATE.LOGIN_IN_PROGRESS) {
+      inProgressNotification = (
+        <Text  style={styles.inProgress}>
+          Setting up your account in our backend...
         </Text>
       )
     }
@@ -32,7 +40,10 @@ class Login extends Component {
           background color="black"
           barStyle="light-content"/>
         <FBLoginButton/>
-        {failedLoginNotification}
+        <View style={styles.notificationContainer}>
+          {inProgressNotification}
+          {failedLoginNotification}
+        </View>
       </Image>
     )
   }
@@ -64,13 +75,23 @@ const styles = StyleSheet.create({
     width: null,
     height: null,
   },
+  notificationContainer: {
+    height: 150,
+    marginBottom: -150,
+    backgroundColor: 'transparent',
+  },
   failedLogin: {
     backgroundColor: '#F6DDDD',
     borderColor: '#F2C9D0',
     color: '#B83538',
-    borderWidth: 2,
+    borderWidth: 1,
     margin: 10,
     padding: 7,
-    marginBottom: -61,
+  },
+  inProgress: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    color: 'orange',
+    margin: 10,
+    padding: 7,
   },
 })

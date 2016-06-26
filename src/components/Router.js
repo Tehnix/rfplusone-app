@@ -4,7 +4,8 @@ import {
   Text,
   View,
   Image,
-  StatusBar
+  StatusBar,
+  Navigator,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router, Modal, Actions } from 'react-native-router-flux'

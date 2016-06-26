@@ -1,4 +1,5 @@
 import {
+  FB_START_LOGIN_ATTEMPT,
   FB_LOGIN_ATTEMPT,
   FB_LOGOUT,
   SET_FB_INFO,
@@ -19,14 +20,21 @@ const initialState = {
 
 export function login(state = initialState, action) {
   switch (action.type) {
+  case FB_START_LOGIN_ATTEMPT:
+    return {
+      ...state,
+      loginState: action.loginState
+    }
   case FB_LOGIN_ATTEMPT:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       accessToken: action.accessToken,
       sessionToken: action.sessionToken,
       loginState: action.loginState
-    })
+    }
   case FB_LOGOUT:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       accessToken: '',
       sessionToken: '',
       loginState: action.loginState,
@@ -36,16 +44,17 @@ export function login(state = initialState, action) {
       facebookMiddleName: '',
       facebookLastName: '',
       facebookEmail: '',
-    })
+    }
   case SET_FB_INFO:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       facebookID: action.fbID,
       facebookFullName: action.fbFullName,
       facebookFirstName: action.fbFirstName,
       facebookMiddleName: action.fbMiddleName,
       facebookLastName: action.fbLastName,
       facebookEmail: action.fbEmail
-    })
+    }
   default:
     return state
   }
