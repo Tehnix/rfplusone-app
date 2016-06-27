@@ -2,6 +2,10 @@ import { ENDPOINTS } from '../stores/Constants'
 import { updateConcertList } from './Concerts'
 import { updateAttendeesList } from './Attendees'
 
+import {
+  requestHeaders
+} from '../Utility'
+
 const FBSDK = require('react-native-fbsdk')
 const {
   AppEventsLogger,
@@ -21,9 +25,7 @@ export function setConcertInterest(concertId, interest) {
 export function sendAttendingInterest(sessionKey, dispatch, concertId, performDispatch) {
   fetch(ENDPOINTS.attending(concertId), {
     method: 'POST',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -45,9 +47,7 @@ export function sendAttendingInterest(sessionKey, dispatch, concertId, performDi
 export function sendNotAttendingInterest(sessionKey, dispatch, concertId, performDispatch) {
   fetch(ENDPOINTS.attending(concertId), {
     method: 'DELETE',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -69,9 +69,7 @@ export function sendNotAttendingInterest(sessionKey, dispatch, concertId, perfor
 export function sendIndividualInterest(sessionKey, dispatch, concertId, performDispatch) {
   fetch(ENDPOINTS.individual(concertId), {
     method: 'POST',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -93,9 +91,7 @@ export function sendIndividualInterest(sessionKey, dispatch, concertId, performD
 export function sendNotIndividualInterest(sessionKey, dispatch, concertId, performDispatch) {
   fetch(ENDPOINTS.individual(concertId), {
     method: 'DELETE',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -115,9 +111,7 @@ export function sendNotIndividualInterest(sessionKey, dispatch, concertId, perfo
 export function sendGroupInterest(sessionKey, dispatch, concertId, performDispatch) {
   fetch(ENDPOINTS.group(concertId), {
     method: 'POST',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -140,9 +134,7 @@ export function sendGroupInterest(sessionKey, dispatch, concertId, performDispat
 export function sendNotGroupInterest(sessionKey, dispatch, concertId, performDispatch) {
   fetch(ENDPOINTS.group(concertId), {
     method: 'DELETE',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -164,9 +156,7 @@ export function sendNotGroupInterest(sessionKey, dispatch, concertId, performDis
 export function sendLike(sessionKey, dispatch, concertId, profileId, performDispatch) {
   fetch(ENDPOINTS.like(concertId, profileId), {
     method: 'POST',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()
@@ -188,9 +178,7 @@ export function sendLike(sessionKey, dispatch, concertId, profileId, performDisp
 export function sendNotLike(sessionKey, dispatch, concertId, profileId, performDispatch) {
   fetch(ENDPOINTS.like(concertId, profileId), {
     method: 'DELETE',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
     return response.json()

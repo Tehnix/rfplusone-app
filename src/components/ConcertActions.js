@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 23,
     textAlign: 'center',
+    textAlignVertical: 'center',
     paddingTop: 10,
     paddingBottom: 10,
   },
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 23,
     textAlign: 'center',
+    textAlignVertical: 'center',
     paddingTop: 10,
     paddingBottom: 10,
   },
@@ -221,6 +223,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 23,
     textAlign: 'center',
+    textAlignVertical: 'center',
     paddingTop: 10,
     paddingBottom: 10,
   }

@@ -8,6 +8,10 @@ import {
   newChatMessages,
 } from './Chats'
 
+import {
+  requestHeaders
+} from '../Utility'
+
 export const SET_REFRESHING = 'SET_REFRESHING'
 
 export const REFRESH_STATE = {
@@ -48,13 +52,11 @@ export function refreshContent(sessionKey, dispatch, sceneKey, routes) {
 export function fetchConcertList(sessionKey, dispatch) {
   fetch(ENDPOINTS.concerts, {
     method: 'GET',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
-  .then((response) => {
-  return response.json()
-})
+    .then((response) => {
+      return response.json()
+    })
   .then((responseData) => {
     if (responseData.error) {
       // Handle errors here...
@@ -73,9 +75,7 @@ export function fetchConcertList(sessionKey, dispatch) {
 export function fetchConcert(sessionKey, dispatch, concertId) {
   fetch(ENDPOINTS.concert(concertId), {
     method: 'GET',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
   return response.json()
@@ -99,9 +99,7 @@ export function fetchConcert(sessionKey, dispatch, concertId) {
 export function fetchChatList(sessionKey, dispatch) {
   fetch(ENDPOINTS.chats, {
     method: 'GET',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
   return response.json()
@@ -136,9 +134,7 @@ export function fetchChatList(sessionKey, dispatch) {
 export function fetchChatMessages(sessionKey, dispatch, chatId) {
   fetch(ENDPOINTS.message(chatId), {
     method: 'GET',
-    headers: {
-      'Authorization': 'Token token=' + sessionKey
-    }
+    headers: requestHeaders(sessionKey)
   })
   .then((response) => {
   return response.json()

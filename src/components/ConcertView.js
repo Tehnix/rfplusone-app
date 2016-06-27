@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Image,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -81,35 +82,62 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 16,
-    textAlign: 'left',
     color: 'orange',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    paddingLeft: 3,
-    paddingRight: 3,
-    marginTop: 45,
     marginLeft: 5,
+      ...Platform.select({
+        ios: {
+          textAlign: 'left',
+          marginTop: 45,
+          paddingLeft: 3,
+          paddingRight: 3,
+        },
+        android: {
+          marginTop: 35,
+          paddingLeft: 10,
+          textAlign: 'center',
+        },
+      })
   },
   concertInfoContainer: {
     alignItems: 'flex-end',
   },
   concertInfo: {
     fontSize: 14,
-    textAlign: 'right',
     color: 'orange',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    paddingLeft: 3,
-    paddingRight: 3,
-    marginRight: 5,
+      ...Platform.select({
+        ios: {
+          textAlign: 'right',
+          paddingLeft: 3,
+          paddingRight: 3,
+          marginRight: 5,
+        },
+        android: {
+          paddingRight: 10,
+          marginRight: 5,
+          textAlign: 'center',
+        },
+      })
   },
   concertInfoTop: {
     fontSize: 14,
-    textAlign: 'right',
+
     color: 'orange',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    paddingLeft: 3,
-    paddingRight: 3,
     marginTop: 10,
     marginRight: 5,
+    paddingLeft: 3,
+      ...Platform.select({
+        ios: {
+          textAlign: 'right',
+          paddingRight: 3,
+        },
+        android: {
+          paddingRight: 10,
+          textAlign: 'center',
+        },
+      })
   },
   bannerImage: {
     height: 130,

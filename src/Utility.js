@@ -66,3 +66,9 @@ export function addMinutesFromDate(d, minutes) {
   const date = new Date(d.getTime() + minutes * 60000)
   return getDateFromDate(date)
 }
+
+export function requestHeaders(sessionKey) {
+  return { 'Content-Type': 'application/json',
+           'Accept': 'application/json',
+           'Authorization': 'Token token=' + sessionKey }
+}
