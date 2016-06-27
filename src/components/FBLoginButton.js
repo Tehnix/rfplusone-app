@@ -2,7 +2,8 @@ import React, { PropTypes, Component } from 'react'
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Platform,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -139,8 +140,16 @@ module.exports = connect()(FBLoginButton)
 
 const styles = StyleSheet.create({
   loginButton: {
-    height: 30,
-    width: 200,
-    transform: [{scale: 1.6}]
+    ...Platform.select({
+      ios: {
+        height: 55,
+        width: 220,
+      },
+      android: {
+        height: 30,
+        width: 200,
+        transform: [{scale: 1.6}]
+      },
+    }),
   },
 })
