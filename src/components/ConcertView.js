@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
   },
   concertInfoTop: {
     fontSize: 14,
-
     color: 'orange',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     marginTop: 10,

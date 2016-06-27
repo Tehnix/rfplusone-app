@@ -9,6 +9,7 @@ import {
   ScrollView,
   RefreshControl,
   Navigator,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -32,6 +33,13 @@ import {
 import {
   setPollingTimer,
 } from '../actions/Chats'
+
+// Android offsets
+androidGUIOffsetNavigation = 0
+
+if (Platform.OS === 'android') {
+  androidGUIOffsetNavigation = -2
+}
 
 class MainLayout extends Component {
   _onRefresh(store) {
@@ -122,7 +130,7 @@ class MainLayout extends Component {
 
   render() {
     const { store } = this.context
-    let topMargin = Navigator.NavigationBar.Styles.General.StatusBarHeight + Navigator.NavigationBar.Styles.General.NavBarHeight
+    let topMargin = Navigator.NavigationBar.Styles.General.StatusBarHeight + Navigator.NavigationBar.Styles.General.NavBarHeight + androidGUIOffsetNavigation
     if (this.props.withoutTopMargin) {
       topMargin = 0
     }

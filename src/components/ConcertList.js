@@ -204,6 +204,12 @@ const styles = StyleSheet.create({
     paddingRight: 3,
     marginRight: 5,
     paddingTop: 3,
+      ...Platform.select({
+        android: {
+          paddingLeft: 10,
+          textAlign: 'center',
+        },
+      })
   },
   concertInfoTop: {
     fontSize: 11,
@@ -214,6 +220,13 @@ const styles = StyleSheet.create({
     paddingRight: 3,
     marginTop: 10,
     marginRight: 5,
+      ...Platform.select({
+        android: {
+          paddingRight: 10,
+          paddingBottom: 1,
+          textAlign: 'center',
+        },
+      })
   },
   concertNameContainer: {
     alignItems: 'flex-start',
@@ -226,5 +239,12 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'orange',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      ...Platform.select({
+        android: {
+          paddingLeft: 10,
+          paddingBottom: 2,
+          textAlign: 'center',
+        },
+      })
   },
 })
