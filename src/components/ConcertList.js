@@ -9,6 +9,7 @@ import {
   ScrollView,
   Navigator,
   Dimensions,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -25,12 +26,20 @@ import {
 
 import MainLayout from './MainLayout'
 
+// Android offsets
+androidGUIOffsetNavigation = 0
+
+if (Platform.OS === 'android') {
+  androidGUIOffsetNavigation = -2
+}
+
 
 class ConcertList extends Component {
   render() {
     const { store } = this.context
     const sessionToken = this.props.sessionToken
-    const navigatorTopMargin = Navigator.NavigationBar.Styles.General.StatusBarHeight + Navigator.NavigationBar.Styles.General.NavBarHeight
+    const navigatorTopMargin = Navigator.NavigationBar.Styles.General.StatusBarHeight + Navigator.NavigationBar.Styles.General.NavBarHeight + androidGUIOffsetNavigation
+
     const {screenHeight, screenWidth} = Dimensions.get('window')
     const pictureHeight = screenWidth * 0.5625
     const concertsFilter = this.props.concertsActiveFilter
