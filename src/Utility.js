@@ -1,5 +1,3 @@
-// import { concertsPictureFiles } from './stores/ConcertsPictureFiles'
-
 const weekdays = {
   0: 'Sunday',
   1: 'Monday',
@@ -68,11 +66,3 @@ export function addMinutesFromDate(d, minutes) {
   const date = new Date(d.getTime() + minutes * 60000)
   return getDateFromDate(date)
 }
-
-// export function getArtistBanner(concert) {
-//   const artist = concert.artist
-//   if (concertsPictureFiles[artist]) {
-//     return concertsPictureFiles[artist].local_url
-//   }
-//   return {uri: concert.images[0].url}
-// }

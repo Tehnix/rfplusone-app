@@ -60,7 +60,7 @@ bg_fb_login.png: bg_fb_login.xcf
 $(android_bg_fb_login): bg_fb_login.png
 	convert $< -resize $(call lookup,$@,$(android_bg_fb_login),$(android_percentages)) $@
 
-$(ios_bg_scales): bg_fb_login.png
-	convert $< -resize $@^ -crop $@+0+0 "$(ios_assets)$(ios_brandset)$@_$<"
-
-background: $(android_bg_fb_login) $(ios_bg_scales)
+#$(ios_bg_scales): bg_fb_login.png
+#	convert $< -resize $@^ -crop $@+0+0 "$(ios_assets)$(ios_brandset)$@_$<"
+#
+background: $(android_bg_fb_login) #$(ios_bg_scales)
