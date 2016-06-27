@@ -31,8 +31,10 @@ class PeopleList extends Component {
     const arrayLength = attendees.length
     for (let i = 0; i < arrayLength; i++) {
       const attendee = attendees[i]
-      if (interest.individual && attendee.interest.individual && !attendee.friend) {
-        filteredAttendees.push(attendee)
+      if (interest.individual) {
+        if (attendee.interest.individual && !attendee.friend) {
+          filteredAttendees.push(attendee)
+        }
       } else if (interest.attending) {
         filteredAttendees.push(attendee)
       }
