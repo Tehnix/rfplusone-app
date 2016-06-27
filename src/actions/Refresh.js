@@ -78,8 +78,8 @@ export function fetchConcert(sessionKey, dispatch, concertId) {
     headers: requestHeaders(sessionKey)
   })
   .then((response) => {
-  return response.json()
-})
+    return response.json()
+  })
   .then((responseData) => {
     if (responseData.error) {
       // Handle errors here...
@@ -102,8 +102,8 @@ export function fetchChatList(sessionKey, dispatch) {
     headers: requestHeaders(sessionKey)
   })
   .then((response) => {
-  return response.json()
-})
+    return response.json()
+  })
   .then((responseData) => {
     if (responseData.error) {
       // Handle errors here...
@@ -137,8 +137,8 @@ export function fetchChatMessages(sessionKey, dispatch, chatId) {
     headers: requestHeaders(sessionKey)
   })
   .then((response) => {
-  return response.json()
-})
+    return response.json()
+  })
   .then((responseData) => {
     if (responseData.error) {
       // Handle errors here...
