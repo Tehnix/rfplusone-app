@@ -8,6 +8,10 @@ Technologies used:
 * Immutable.js
 * Facebook's SDK
 
+# Showcase
+
+<img src="https://github.com/Tehnix/rfplusone-app/raw/master/screenshots/iPhone%206s%20Plus%20-%20Login.png" width="24%" /> <img src="https://github.com/Tehnix/rfplusone-app/blob/master/screenshots/iPhone%206s%20Plus%20-%20Concert%20List.png" width="24%" /> <img src="https://github.com/Tehnix/rfplusone-app/raw/master/screenshots/iPhone%206s%20Plus%20-%20Concert%20View.png" width="24%" /> <img src="https://github.com/Tehnix/rfplusone-app/blob/master/screenshots/iPhone%206s%20Plus%20-%20Concert%20List%202.png" width="24%" />
+
 
 # Running the simulators
 For iOS use
